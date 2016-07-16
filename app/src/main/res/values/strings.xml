@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Proximity Service</string>
+    <string name="notification_running">Service is currently running.</string>
+    <string name="notification_stopped">Service is stopped, swipe to dismiss.</string>
+    <string name="action_stop">STOP</string>
+    <string name="action_restart">RESTART</string>
 </resources>

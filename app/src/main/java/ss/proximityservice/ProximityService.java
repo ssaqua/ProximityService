@@ -77,7 +77,7 @@ public class ProximityService extends Service {
                     }
                 });
 
-                showNotification();
+                showStopNotification();
                 updateProximitySensorMode(true);
             }
         } else {
@@ -105,7 +105,7 @@ public class ProximityService extends Service {
             }
         });
 
-        notificationManager.cancel(NOTIFICATION);
+        showStartNotification();
         updateProximitySensorMode(false);
     }
 
@@ -115,18 +115,35 @@ public class ProximityService extends Service {
         return null;
     }
 
-    private void showNotification() {
+    private void showStopNotification() {
+        // PendingIntent from getBroadcast to prevent collapsing the notification drawer on stop
+        PendingIntent stopIntent = PendingIntent.getBroadcast(this, 0, new Intent(ControlReceiver.ACTION_STOP), 0);
+
         Notification.Builder notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
-                .setContentTitle("Proximity Service")
-                .setContentText("Touch to disable the service.")
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, StopActivity.class), 0))
+                .setContentTitle(getString(R.string.app_name))
+                .addAction(R.drawable.empty, getString(R.string.action_stop), stopIntent)
                 .setOngoing(true)
-                .setPriority(Notification.PRIORITY_LOW);
+                .setPriority(Notification.PRIORITY_LOW)
+                .setStyle(new Notification.BigTextStyle().bigText(getString(R.string.notification_running)));
 
         if (Build.VERSION.SDK_INT >= 21) {
             notification.setCategory(Notification.CATEGORY_SERVICE);
         }
+
+        notificationManager.notify(NOTIFICATION, notification.build());
+    }
+
+    private void showStartNotification() {
+        // PendingIntent from getActivity to collapse the notification drawer on start
+        PendingIntent startIntent = PendingIntent.getActivity(this, 0, new Intent(getApplicationContext(), StartActivity.class), 0);
+
+        Notification.Builder notification = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
+                .setContentTitle(getString(R.string.app_name))
+                .addAction(R.drawable.empty, getString(R.string.action_restart), startIntent)
+                .setPriority(Notification.PRIORITY_LOW)
+                .setStyle(new Notification.BigTextStyle().bigText(getString(R.string.notification_stopped)));
 
         notificationManager.notify(NOTIFICATION, notification.build());
     }

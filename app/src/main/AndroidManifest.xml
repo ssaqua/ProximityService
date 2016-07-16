@@ -16,6 +16,15 @@
             android:enabled="true"
             android:exported="true" />
 
+        <receiver
+            android:name=".ControlReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ss.proximityservice.intent.action.STOP" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".StartActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
