@@ -116,16 +116,15 @@ public class ProximityService extends Service {
     }
 
     private void showStopNotification() {
-        // PendingIntent from getBroadcast to prevent collapsing the notification drawer on stop
-        PendingIntent stopIntent = PendingIntent.getBroadcast(this, 0, new Intent(ControlReceiver.ACTION_STOP), 0);
+        PendingIntent stopIntent = PendingIntent.getActivity(this, 0, new Intent(this, StopActivity.class), 0);
 
         Notification.Builder notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
                 .setContentTitle(getString(R.string.app_name))
-                .addAction(R.drawable.empty, getString(R.string.action_stop), stopIntent)
+                .setContentText(getString(R.string.notification_running))
+                .setContentIntent(stopIntent)
                 .setOngoing(true)
-                .setPriority(Notification.PRIORITY_LOW)
-                .setStyle(new Notification.BigTextStyle().bigText(getString(R.string.notification_running)));
+                .setPriority(Notification.PRIORITY_LOW);
 
         if (Build.VERSION.SDK_INT >= 21) {
             notification.setCategory(Notification.CATEGORY_SERVICE);
@@ -135,15 +134,14 @@ public class ProximityService extends Service {
     }
 
     private void showStartNotification() {
-        // PendingIntent from getActivity to collapse the notification drawer on start
-        PendingIntent startIntent = PendingIntent.getActivity(this, 0, new Intent(getApplicationContext(), StartActivity.class), 0);
+        PendingIntent startIntent = PendingIntent.getActivity(this, 0, new Intent(this, StartActivity.class), 0);
 
         Notification.Builder notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
                 .setContentTitle(getString(R.string.app_name))
-                .addAction(R.drawable.empty, getString(R.string.action_restart), startIntent)
-                .setPriority(Notification.PRIORITY_LOW)
-                .setStyle(new Notification.BigTextStyle().bigText(getString(R.string.notification_stopped)));
+                .setContentText(getString(R.string.notification_stopped))
+                .setContentIntent(startIntent)
+                .setPriority(Notification.PRIORITY_LOW);
 
         notificationManager.notify(NOTIFICATION, notification.build());
     }
