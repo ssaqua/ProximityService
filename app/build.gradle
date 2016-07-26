@@ -7,8 +7,8 @@ android {
         applicationId "ss.proximityservice"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 3
-        versionName "1.1"
+        versionCode 4
+        versionName "1.2"
     }
 
     if (rootProject.file('keystore.properties').exists()) {

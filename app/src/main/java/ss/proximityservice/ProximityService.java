@@ -19,7 +19,7 @@ public class ProximityService extends Service {
     private static final String TAG = "ProximityService";
 
     // identifier for persistent notification
-    private static final int NOTIFICATION = 0;
+    private static final int NOTIFICATION = 1;
 
     private NotificationManager notificationManager;
 
@@ -77,7 +77,7 @@ public class ProximityService extends Service {
                     }
                 });
 
-                showStopNotification();
+                startForeground(NOTIFICATION, getStopNotification());
                 updateProximitySensorMode(true);
             }
         } else {
@@ -91,7 +91,7 @@ public class ProximityService extends Service {
             });
         }
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -105,6 +105,7 @@ public class ProximityService extends Service {
             }
         });
 
+        stopSelf();
         showStartNotification();
         updateProximitySensorMode(false);
     }
@@ -115,7 +116,7 @@ public class ProximityService extends Service {
         return null;
     }
 
-    private void showStopNotification() {
+    private Notification getStopNotification() {
         PendingIntent stopIntent = PendingIntent.getActivity(this, 0, new Intent(this, StopActivity.class), 0);
 
         Notification.Builder notification = new Notification.Builder(this)
@@ -130,7 +131,7 @@ public class ProximityService extends Service {
             notification.setCategory(Notification.CATEGORY_SERVICE);
         }
 
-        notificationManager.notify(NOTIFICATION, notification.build());
+        return notification.build();
     }
 
     private void showStartNotification() {
