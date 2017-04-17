@@ -6,10 +6,8 @@
 
 Minimal Android service for turning off the screen using the proximity sensor.
 
-Does nothing other than acquiring the [PROXIMITY_SCREEN_OFF_WAKE_LOCK]
-(https://developer.android.com/reference/android/os/PowerManager.html#PROXIMITY_SCREEN_OFF_WAKE_LOCK)
-and disabling the [KeyguardLock]
-(https://developer.android.com/reference/android/app/KeyguardManager.KeyguardLock.html)
+Does nothing other than acquiring the [PROXIMITY_SCREEN_OFF_WAKE_LOCK](https://developer.android.com/reference/android/os/PowerManager.html#PROXIMITY_SCREEN_OFF_WAKE_LOCK)
+and disabling the [KeyguardLock](https://developer.android.com/reference/android/app/KeyguardManager.KeyguardLock.html)
 on starting the service and doing the reverse on stopping the service, as well as showing a few toasts
 where appropriate to indicate the service status.
 
