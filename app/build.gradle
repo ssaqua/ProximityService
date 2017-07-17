@@ -30,6 +30,7 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix '.debug'
             // use built-in shrinker http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
             minifyEnabled true
             shrinkResources false
@@ -49,6 +50,7 @@ android {
     }
 
     dependencies {
+        compile 'com.android.support:appcompat-v7:26.0.0-beta2'
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     }
 }
