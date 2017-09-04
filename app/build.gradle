@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    buildToolsVersion '26.0.1'
     defaultConfig {
         applicationId 'ss.proximityservice'
         minSdkVersion 16
@@ -31,11 +32,6 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            // use built-in shrinker http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
-            minifyEnabled true
-            shrinkResources false
-            useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true
@@ -50,7 +46,15 @@ android {
     }
 
     dependencies {
-        compile 'com.android.support:appcompat-v7:26.0.0-beta2'
+        compile 'com.afollestad.material-dialogs:core:0.9.4.7'
+        compile 'com.android.support:appcompat-v7:26.0.2'
+        compile 'com.android.support:recyclerview-v7:26.0.2'
+        compile 'com.android.support:support-v13:26.0.2'
+        compile 'com.google.dagger:dagger:2.11'
+        kapt 'com.google.dagger:dagger-compiler:2.11'
+        compile 'com.google.dagger:dagger-android:2.11'
+        compile 'com.google.dagger:dagger-android-support:2.11'
+        kapt 'com.google.dagger:dagger-android-processor:2.11'
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     }
 }
