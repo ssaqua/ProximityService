@@ -3,4 +3,12 @@
     <string name="settings_name">Proximity Settings</string>
     <string name="notification_running">Touch to stop service.</string>
     <string name="notification_stopped">Touch to restart service or swipe to dismiss.</string>
+    <string name="settings_notification">Notification</string>
+    <string name="settings_notification_secondary">Default notification action</string>
+    <string name="settings_service_mode">Service mode</string>
+    <string name="settings_service_mode_secondary">Proximity sensor wakelock</string>
+    <string name="condition_inactive">Service is inactive</string>
+    <string name="condition_active">Service is active</string>
+    <string name="button_on">Turn on</string>
+    <string name="button_off">Turn off</string>
 </resources>

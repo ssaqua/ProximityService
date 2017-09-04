@@ -1,4 +1,7 @@
 <resources>
     <color name="primary">#03A9F4</color>
     <color name="primaryDark">#0298F1</color>
+    <color name="primaryLight">#B3E5FC</color>
+    <color name="accent">#4CAF50</color>
+    <color name="dividerBlack">#1F000000</color>
 </resources>

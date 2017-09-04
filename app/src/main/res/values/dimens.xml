@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="default_padding">16dp</dimen>
+    <dimen name="half_padding">8dp</dimen>
+    <dimen name="list_two_line_height">72dp</dimen>
+    <dimen name="list_primary_text">16sp</dimen>
+    <dimen name="list_secondary_text">14sp</dimen>
+    <dimen name="card_margin_horizontal">-3dp</dimen>
+</resources>
