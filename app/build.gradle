@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId 'ss.proximityservice'
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 4
         versionName '1.2'
     }
