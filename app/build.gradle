@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 26
@@ -47,14 +48,14 @@ android {
 
     dependencies {
         compile 'com.afollestad.material-dialogs:core:0.9.4.7'
-        compile 'com.android.support:appcompat-v7:26.0.2'
-        compile 'com.android.support:recyclerview-v7:26.0.2'
-        compile 'com.android.support:support-v13:26.0.2'
-        compile 'com.google.dagger:dagger:2.11'
-        kapt 'com.google.dagger:dagger-compiler:2.11'
-        compile 'com.google.dagger:dagger-android:2.11'
-        compile 'com.google.dagger:dagger-android-support:2.11'
-        kapt 'com.google.dagger:dagger-android-processor:2.11'
+        compile 'com.android.support:appcompat-v7:26.1.0'
+        compile 'com.android.support:recyclerview-v7:26.1.0'
+        compile 'com.android.support:support-v13:26.1.0'
+        compile 'com.google.dagger:dagger:2.13'
+        kapt 'com.google.dagger:dagger-compiler:2.13'
+        compile 'com.google.dagger:dagger-android:2.13'
+        compile 'com.google.dagger:dagger-android-support:2.13'
+        kapt 'com.google.dagger:dagger-android-processor:2.13'
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     }
 }
