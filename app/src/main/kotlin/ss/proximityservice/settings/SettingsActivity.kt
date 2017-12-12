@@ -20,21 +20,27 @@ class SettingsActivity : AppCompatActivity() {
 
         btn_service_on.setOnClickListener {
             startService(Intent(this, ProximityService::class.java))
-
-            condition_card.setBackgroundColor(ContextCompat.getColor(this, R.color.accent))
-            tv_condition.text = getText(R.string.condition_active)
-            it.visibility = View.GONE
-            btn_service_off.visibility = View.VISIBLE
+            setActive()
         }
 
         btn_service_off.setOnClickListener {
             stopService(Intent(this, ProximityService::class.java))
-
-            condition_card.setBackgroundColor(ContextCompat.getColor(this, R.color.primaryLight))
-            tv_condition.text = getText(R.string.condition_inactive)
-            it.visibility = View.GONE
-            btn_service_on.visibility = View.VISIBLE
+            setInactive()
         }
+    }
+
+    private fun setActive() {
+        condition_card.setBackgroundColor(ContextCompat.getColor(this, R.color.accent))
+        tv_condition.text = getText(R.string.condition_active)
+        btn_service_on.visibility = View.GONE
+        btn_service_off.visibility = View.VISIBLE
+    }
+
+    private fun setInactive() {
+        condition_card.setBackgroundColor(ContextCompat.getColor(this, R.color.primaryLight))
+        tv_condition.text = getText(R.string.condition_inactive)
+        btn_service_off.visibility = View.GONE
+        btn_service_on.visibility = View.VISIBLE
     }
 
     override fun onResume() {
@@ -46,6 +52,11 @@ class SettingsActivity : AppCompatActivity() {
                     resources.getColor(R.color.primaryDark)
             )
             setTaskDescription(taskDescription)
+        }
+        if (!ProximityService.running) {
+            setInactive()
+        } else {
+            setActive()
         }
     }
 }

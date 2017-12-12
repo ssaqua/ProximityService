@@ -4,36 +4,43 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.*
+import android.support.v4.app.NotificationCompat
 import android.widget.Toast
+import ss.proximityservice.settings.SettingsActivity
 
 class ProximityService : Service() {
-    val tag = "ProximityService"
-    val notificationId = 1
 
-    val notificationManager: NotificationManager by lazy {
+    companion object {
+        const val TAG = "ProximityService"
+        var running = false
+    }
+
+    private val notificationId = 1
+
+    private val notificationManager: NotificationManager by lazy {
         getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
     // using deprecated KeyguardLock as the suggested alternative (WindowManager.LayoutParams flags)
     // is not suitable for a Service with no user interface
-    val keyguardLock: KeyguardManager.KeyguardLock by lazy {
+    private val keyguardLock: KeyguardManager.KeyguardLock by lazy {
         val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-        keyguardManager.newKeyguardLock(tag)
+        keyguardManager.newKeyguardLock(TAG)
     }
 
-    val handler: Handler = Handler(Looper.getMainLooper())
-    var proximityWakeLock: PowerManager.WakeLock? = null
-    var keyguardDisableCount: Int = 0
+    private val handler: Handler = Handler(Looper.getMainLooper())
+    private var proximityWakeLock: PowerManager.WakeLock? = null
+    private var keyguardDisableCount: Int = 0
 
     override fun onCreate() {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         if (Build.VERSION.SDK_INT >= 21) {
             if (powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
-                proximityWakeLock = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, tag)
+                proximityWakeLock = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, TAG)
             }
         } else {
             // PowerManager#getSupportedWakeLockFlags() removed so no WakeLock level support checking for api < 21
-            proximityWakeLock = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, tag)
+            proximityWakeLock = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, TAG)
         }
     }
 
@@ -41,13 +48,14 @@ class ProximityService : Service() {
         proximityWakeLock?.let {
             if (it.isHeld) {
                 handler.post {
-                    Toast.makeText(applicationContext, "Proximity WakeLock is already acquired", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Proximity Service is already active", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 handler.post {
                     Toast.makeText(applicationContext, "Proximity Service started", Toast.LENGTH_SHORT).show()
                 }
                 startForeground(notificationId, stopNotification)
+                running = true
                 updateProximitySensorMode(true)
             }
         } ?: run {
@@ -75,15 +83,17 @@ class ProximityService : Service() {
 
     private val stopNotification: Notification
         get() {
-            val stopIntent = PendingIntent.getActivity(this, 0, Intent(this, StopActivity::class.java), 0)
+            val settingsIntent = PendingIntent.getActivity(this, 0, Intent(this, SettingsActivity::class.java), 0)
+            val stopIntent = PendingIntent.getActivity(this, 1, Intent(this, StopActivity::class.java), 0)
 
-            val notification = Notification.Builder(this)
+            val notification = NotificationCompat.Builder(this, TAG)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.notification_running))
-                    .setContentIntent(stopIntent)
+                    .setContentIntent(settingsIntent)
+                    .addAction(R.drawable.ic_stop_black_24dp, getString(R.string.notification_action_stop), stopIntent)
                     .setOngoing(true)
-                    .setPriority(Notification.PRIORITY_LOW)
+                    .setPriority(NotificationCompat.PRIORITY_LOW)
 
             if (Build.VERSION.SDK_INT >= 21) {
                 notification.setCategory(Notification.CATEGORY_SERVICE)
