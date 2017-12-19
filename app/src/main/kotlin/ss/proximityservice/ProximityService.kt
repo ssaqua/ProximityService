@@ -11,11 +11,13 @@ import ss.proximityservice.settings.SettingsActivity
 class ProximityService : Service() {
 
     companion object {
-        const val TAG = "ProximityService"
+        private const val TAG = "ProximityService"
+        private const val NOTIFICATION_ID = 1
+
         var running = false
     }
 
-    private val notificationId = 1
+
 
     private val notificationManager: NotificationManager by lazy {
         getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -54,7 +56,7 @@ class ProximityService : Service() {
                 handler.post {
                     Toast.makeText(applicationContext, "Proximity Service started", Toast.LENGTH_SHORT).show()
                 }
-                startForeground(notificationId, stopNotification)
+                startForeground(NOTIFICATION_ID, stopNotification)
                 running = true
                 updateProximitySensorMode(true)
             }
@@ -89,11 +91,17 @@ class ProximityService : Service() {
             val notification = NotificationCompat.Builder(this, TAG)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
                     .setContentTitle(getString(R.string.app_name))
-                    .setContentText(getString(R.string.notification_running))
-                    .setContentIntent(settingsIntent)
-                    .addAction(R.drawable.ic_stop_black_24dp, getString(R.string.notification_action_stop), stopIntent)
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
+
+            if (Build.VERSION.SDK_INT >= 16) {
+                notification.setContentText(getString(R.string.notification_running))
+                        .setContentIntent(stopIntent)
+                        .addAction(R.drawable.ic_settings_black_24dp, getString(R.string.notification_action_settings), settingsIntent)
+            } else {
+                notification.setContentText(getString(R.string.notification_settings))
+                        .setContentIntent(settingsIntent)
+            }
 
             if (Build.VERSION.SDK_INT >= 21) {
                 notification.setCategory(Notification.CATEGORY_SERVICE)
@@ -112,7 +120,7 @@ class ProximityService : Service() {
                 .setContentIntent(startIntent)
                 .setPriority(Notification.PRIORITY_LOW)
 
-        notificationManager.notify(notificationId, notification.build())
+        notificationManager.notify(NOTIFICATION_ID, notification.build())
     }
 
     private fun updateProximitySensorMode(on: Boolean) {
