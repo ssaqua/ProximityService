@@ -14,8 +14,12 @@
         android:supportsRtl="true">
         <service
             android:name=".ProximityService"
-            android:enabled="true"
-            android:exported="true" />
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="ss.proximityservice.START" />
+                <action android:name="ss.proximityservice.STOP" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name="ss.proximityservice.settings.SettingsActivity"

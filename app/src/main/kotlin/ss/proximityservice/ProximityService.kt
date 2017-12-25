@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.*
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
 import ss.proximityservice.settings.SettingsActivity
 
@@ -14,10 +15,11 @@ class ProximityService : Service() {
         private const val TAG = "ProximityService"
         private const val NOTIFICATION_ID = 1
 
+        const val INTENT_START_ACTION = "ss.proximityservice.START"
+        const val INTENT_STOP_ACTION = "ss.proximityservice.STOP"
+
         var running = false
     }
-
-
 
     private val notificationManager: NotificationManager by lazy {
         getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -47,6 +49,15 @@ class ProximityService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        val action = intent.action
+        when (action) {
+            INTENT_START_ACTION -> start()
+            INTENT_STOP_ACTION -> stop()
+        }
+        return Service.START_NOT_STICKY
+    }
+
+    private fun start() {
         proximityWakeLock?.let {
             if (it.isHeld) {
                 handler.post {
@@ -65,17 +76,22 @@ class ProximityService : Service() {
                 Toast.makeText(applicationContext, "Proximity WakeLock not supported on this device", Toast.LENGTH_SHORT).show()
             }
         }
-
-        return Service.START_NOT_STICKY
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(SettingsActivity.INTENT_SET_ACTIVE_ACTION))
     }
 
-    override fun onDestroy() {
+    private fun stop() {
+        running = false
         handler.post {
             Toast.makeText(applicationContext, "Proximity Service stopped", Toast.LENGTH_SHORT).show()
         }
         stopSelf()
         showStartNotification()
         updateProximitySensorMode(false)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(SettingsActivity.INTENT_SET_INACTIVE_ACTION))
+    }
+
+    override fun onDestroy() {
+        stop()
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -85,8 +101,18 @@ class ProximityService : Service() {
 
     private val stopNotification: Notification
         get() {
-            val settingsIntent = PendingIntent.getActivity(this, 0, Intent(this, SettingsActivity::class.java), 0)
-            val stopIntent = PendingIntent.getActivity(this, 1, Intent(this, StopActivity::class.java), 0)
+            val settingsIntent = PendingIntent.getActivity(
+                    this,
+                    0,
+                    Intent(this, SettingsActivity::class.java),
+                    0
+            )
+            val stopIntent = PendingIntent.getService(
+                    this,
+                    1,
+                    Intent(this, ProximityService::class.java).setAction(INTENT_STOP_ACTION),
+                    0
+            )
 
             val notification = NotificationCompat.Builder(this, TAG)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
@@ -111,7 +137,12 @@ class ProximityService : Service() {
         }
 
     private fun showStartNotification() {
-        val startIntent = PendingIntent.getActivity(this, 0, Intent(this, StartActivity::class.java), 0)
+        val startIntent = PendingIntent.getService(
+                this,
+                0,
+                Intent(this, ProximityService::class.java).setAction(INTENT_START_ACTION),
+                0
+        )
 
         val notification = Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)

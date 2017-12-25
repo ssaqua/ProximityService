@@ -8,7 +8,8 @@ class StopActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ProximityService.running = false
-        stopService(Intent(this, ProximityService::class.java))
+        startService(Intent(this, ProximityService::class.java)
+                .setAction(ProximityService.INTENT_STOP_ACTION))
         finish()
     }
 }
