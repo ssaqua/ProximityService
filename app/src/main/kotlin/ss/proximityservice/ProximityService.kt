@@ -101,18 +101,8 @@ class ProximityService : Service() {
 
     private val stopNotification: Notification
         get() {
-            val settingsIntent = PendingIntent.getActivity(
-                    this,
-                    0,
-                    Intent(this, SettingsActivity::class.java),
-                    0
-            )
-            val stopIntent = PendingIntent.getService(
-                    this,
-                    1,
-                    Intent(this, ProximityService::class.java).setAction(INTENT_STOP_ACTION),
-                    0
-            )
+            val settingsIntent = PendingIntent.getActivity(this, 0, Intent(this, SettingsActivity::class.java), 0)
+            val stopIntent = PendingIntent.getService(this, 1, Intent(this, ProximityService::class.java).setAction(INTENT_STOP_ACTION), 0)
 
             val notification = NotificationCompat.Builder(this, TAG)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
@@ -137,19 +127,19 @@ class ProximityService : Service() {
         }
 
     private fun showStartNotification() {
-        val startIntent = PendingIntent.getService(
-                this,
-                0,
-                Intent(this, ProximityService::class.java).setAction(INTENT_START_ACTION),
-                0
-        )
+        val settingsIntent = PendingIntent.getActivity(this, 0, Intent(this, SettingsActivity::class.java), 0)
+        val startIntent = PendingIntent.getService(this, 0, Intent(this, ProximityService::class.java).setAction(INTENT_START_ACTION), 0)
 
-        val notification = Notification.Builder(this)
+        val notification = NotificationCompat.Builder(this, TAG)
                 .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.notification_stopped))
                 .setContentIntent(startIntent)
-                .setPriority(Notification.PRIORITY_LOW)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+
+        if (Build.VERSION.SDK_INT >= 16) {
+            notification.addAction(R.drawable.ic_settings_black_24dp, getString(R.string.notification_action_settings), settingsIntent)
+        }
 
         notificationManager.notify(NOTIFICATION_ID, notification.build())
     }
