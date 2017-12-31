@@ -18,12 +18,6 @@ import ss.proximityservice.ProximityService
 import ss.proximityservice.R
 
 class SettingsActivity : AppCompatActivity() {
-
-    companion object {
-        const val INTENT_SET_ACTIVE_ACTION = "ss.proximityservice.SET_ACTIVE"
-        const val INTENT_SET_INACTIVE_ACTION = "ss.proximityservice.SET_INACTIVE"
-    }
-
     private val stateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
@@ -91,5 +85,10 @@ class SettingsActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(stateReceiver)
+    }
+
+    companion object {
+        const val INTENT_SET_ACTIVE_ACTION = "ss.proximityservice.SET_ACTIVE"
+        const val INTENT_SET_INACTIVE_ACTION = "ss.proximityservice.SET_INACTIVE"
     }
 }

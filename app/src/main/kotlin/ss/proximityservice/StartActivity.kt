@@ -7,8 +7,9 @@ import android.os.Bundle
 class StartActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startService(Intent(this, ProximityService::class.java)
-                .setAction(ProximityService.INTENT_START_ACTION))
+        val intent = Intent(this, ProximityService::class.java)
+                .setAction(ProximityService.INTENT_START_ACTION)
+        startService(intent)
         finish()
     }
 }
