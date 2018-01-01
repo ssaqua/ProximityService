@@ -13,4 +13,5 @@
     <string name="condition_active">Service is active</string>
     <string name="button_on">Turn on</string>
     <string name="button_off">Turn off</string>
+    <string name="shortcut_label">Settings</string>
 </resources>

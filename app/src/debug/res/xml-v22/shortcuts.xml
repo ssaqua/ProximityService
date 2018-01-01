@@ -1,0 +1,12 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="settings"
+        android:icon="@drawable/ic_shortcut_settings"
+        android:shortcutShortLabel="@string/shortcut_label">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ss.proximityservice.debug"
+            android:targetClass="ss.proximityservice.settings.SettingsActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>
