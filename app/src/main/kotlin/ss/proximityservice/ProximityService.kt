@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.*
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
 import ss.proximityservice.settings.SettingsActivity
 import java.util.concurrent.atomic.AtomicInteger
@@ -118,6 +119,8 @@ class ProximityService : Service() {
                 startForeground(NOTIFICATION_ID, runningNotification)
                 updateProximitySensorMode(true)
                 running = true
+                LocalBroadcastManager.getInstance(this)
+                        .sendBroadcast(Intent(SettingsActivity.INTENT_SET_ACTIVE_ACTION))
             }
         } ?: run {
             handler.post { toast("Proximity WakeLock not supported on this device") }
@@ -128,6 +131,8 @@ class ProximityService : Service() {
         handler.post { toast("Proximity Service stopped") }
         updateProximitySensorMode(false)
         running = false
+        LocalBroadcastManager.getInstance(this)
+                .sendBroadcast(Intent(SettingsActivity.INTENT_SET_INACTIVE_ACTION))
         stopSelf()
         // TODO: conditionally post the stopped notification
         notificationManager.notify(NOTIFICATION_ID, stoppedNotification)
