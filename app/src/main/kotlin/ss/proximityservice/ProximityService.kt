@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class ProximityService : Service() {
     private val proximityWakeLock: PowerManager.WakeLock? by lazy {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-        if (Build.VERSION.SDK_INT >= 21) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
                 powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, TAG)
             } else {
@@ -53,7 +53,7 @@ class ProximityService : Service() {
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
 
-            if (Build.VERSION.SDK_INT >= 16) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 notification.setContentText(getString(R.string.notification_running))
                         .setContentIntent(stopIntent)
                         .addAction(R.drawable.ic_settings_white_24dp, getString(R.string.notification_action_settings), settingsIntent)
@@ -62,7 +62,7 @@ class ProximityService : Service() {
                         .setContentIntent(settingsIntent)
             }
 
-            if (Build.VERSION.SDK_INT >= 21) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 notification.setCategory(Notification.CATEGORY_SERVICE)
             }
 
