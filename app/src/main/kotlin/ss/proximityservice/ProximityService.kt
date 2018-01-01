@@ -47,7 +47,7 @@ class ProximityService : Service() {
                     Intent(this, SettingsActivity::class.java),
                     PendingIntent.FLAG_ONE_SHOT)
 
-            val notification = NotificationCompat.Builder(this, CHANNEL_RUNNING)
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
                     .setContentTitle(getString(R.string.app_name))
                     .setOngoing(true)
@@ -78,7 +78,7 @@ class ProximityService : Service() {
                     Intent(this, SettingsActivity::class.java),
                     PendingIntent.FLAG_ONE_SHOT)
 
-            val notification = NotificationCompat.Builder(this, CHANNEL_STOPPED)
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.notification_stopped))
@@ -93,6 +93,16 @@ class ProximityService : Service() {
         }
 
     private val handler: Handler = Handler(Looper.getMainLooper())
+
+    override fun onCreate() {
+        super.onCreate()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CHANNEL_ID,
+                    "Service State", NotificationManager.IMPORTANCE_LOW)
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val action = intent.action
@@ -182,8 +192,7 @@ class ProximityService : Service() {
         const val INTENT_START_ACTION = "ss.proximityservice.START"
         const val INTENT_STOP_ACTION = "ss.proximityservice.STOP"
 
-        private const val CHANNEL_RUNNING = "running"
-        private const val CHANNEL_STOPPED = "stopped"
+        private const val CHANNEL_ID = "proximityservice"
 
         private const val NOTIFICATION_ID = 1
 
