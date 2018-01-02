@@ -12,6 +12,9 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.afollestad.materialdialogs.GravityEnum
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.StackingBehavior
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import ss.proximityservice.ProximityService
@@ -51,6 +54,18 @@ class SettingsActivity : AppCompatActivity() {
             startService(Intent(this, ProximityService::class.java)
                     .setAction(ProximityService.INTENT_STOP_ACTION))
             setInactive()
+        }
+
+        setting_notification_behavior.setOnClickListener {
+            MaterialDialog.Builder(this)
+                    .title(getString(R.string.settings_notification_behavior_title))
+                    .content(R.string.settings_notification_behavior_description)
+                    .positiveText(R.string.dismiss)
+                    .negativeText(R.string.retain)
+                    .btnStackedGravity(GravityEnum.START)
+                    .stackingBehavior(StackingBehavior.ALWAYS)
+                    .onAny { _, which -> /* TODO */ }
+                    .show()
         }
     }
 
