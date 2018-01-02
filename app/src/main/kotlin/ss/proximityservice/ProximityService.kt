@@ -50,7 +50,6 @@ class ProximityService : Service() {
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
                     .setContentTitle(getString(R.string.app_name))
-                    .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -63,7 +62,10 @@ class ProximityService : Service() {
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                notification.setCategory(Notification.CATEGORY_SERVICE)
+                // using CATEGORY_TRANSPORT instead of CATEGORY_SERVICE as a workaround for
+                // Nova Launcher's notification badges and notification content in the popup
+                // menu (added in 5.2)
+                notification.setCategory(Notification.CATEGORY_TRANSPORT)
             }
 
             return notification.build()
