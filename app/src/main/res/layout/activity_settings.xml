@@ -91,7 +91,7 @@
             android:paddingLeft="@dimen/default_padding"
             android:text="@string/settings_subheader" />
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/service_mode"
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_two_line_height"
@@ -123,7 +123,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/dividerBlack" />
+            android:background="@color/dividerBlack" />-->
 
         <LinearLayout
             android:id="@+id/setting_notification_behavior"
@@ -152,6 +152,52 @@
                 android:fontFamily="sans-serif"
                 android:textSize="@dimen/list_secondary_text"
                 android:text="@string/settings_notification_behavior_secondary_dismiss" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dividerBlack" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_three_line_height"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/default_padding"
+                android:paddingEnd="@dimen/default_padding"
+                android:fontFamily="sans-serif"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="@dimen/list_primary_text"
+                android:text="@string/settings_screen_off_delay_title" />
+
+            <SeekBar
+                android:id="@+id/setting_screen_off_delay_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/half_padding"
+                android:layout_marginLeft="@dimen/half_padding"
+                android:layout_marginRight="@dimen/default_padding"
+                android:layout_marginStart="@dimen/half_padding"
+                android:layout_marginEnd="@dimen/default_padding"
+                android:max="3"
+                style="@style/Widget.AppCompat.SeekBar.Discrete" />
+
+            <TextView
+                android:id="@+id/screen_off_delay_secondary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/half_padding"
+                android:paddingStart="@dimen/default_padding"
+                android:paddingEnd="@dimen/default_padding"
+                android:fontFamily="sans-serif"
+                android:textSize="@dimen/list_secondary_text"
+                android:text="@string/screen_off_delay_zero" />
 
         </LinearLayout>
 

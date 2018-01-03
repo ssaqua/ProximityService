@@ -19,4 +19,9 @@
     <string name="shortcut_label">Settings</string>
     <string name="dismiss">Dismiss</string>
     <string name="retain">Retain</string>
+    <string name="settings_screen_off_delay_title">Screen off delay</string>
+    <string name="screen_off_delay_zero">None</string>
+    <string name="screen_off_delay_one">1 second</string>
+    <string name="screen_off_delay_two">2 seconds</string>
+    <string name="screen_off_delay_three">3 seconds</string>
 </resources>

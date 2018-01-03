@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.View
+import android.widget.SeekBar
 import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.StackingBehavior
@@ -79,6 +80,44 @@ class SettingsActivity : DaggerAppCompatActivity() {
                     }}
                     .show()
         }
+
+        setting_screen_off_delay_seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                when (progress) {
+                    0 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_zero)
+                    1 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_one)
+                    2 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_two)
+                    3 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_three)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                appStorage.put(SCREEN_OFF_DELAY, seekBar.progress)
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!ProximityService.running) {
+            setInactive()
+        } else {
+            setActive()
+        }
+
+        updateWithCurrentSettingValues()
+
+        val filter = IntentFilter()
+        filter.addAction(INTENT_SET_ACTIVE_ACTION)
+        filter.addAction(INTENT_SET_INACTIVE_ACTION)
+        LocalBroadcastManager.getInstance(this).registerReceiver(stateReceiver, filter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(stateReceiver)
     }
 
     private fun setActive() {
@@ -95,23 +134,25 @@ class SettingsActivity : DaggerAppCompatActivity() {
         btn_service_on.visibility = View.VISIBLE
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (!ProximityService.running) {
-            setInactive()
-        } else {
-            setActive()
+    private fun updateWithCurrentSettingValues() {
+        if (!appStorage.getBoolean(NOTIFICATION_DISMISS, true)) {
+            notification_behavior_secondary_text.text = getString(R.string.settings_notification_behavior_secondary_retain)
         }
 
-        val filter = IntentFilter()
-        filter.addAction(INTENT_SET_ACTIVE_ACTION)
-        filter.addAction(INTENT_SET_INACTIVE_ACTION)
-        LocalBroadcastManager.getInstance(this).registerReceiver(stateReceiver, filter)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(stateReceiver)
+        var screenOffDelay = appStorage.getInt(SCREEN_OFF_DELAY, 0)
+        when (screenOffDelay) {
+            0 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_zero)
+            1 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_one)
+            2 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_two)
+            3 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_three)
+            else -> {
+                // reset to zero
+                screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_zero)
+                appStorage.put(SCREEN_OFF_DELAY, 0)
+                screenOffDelay = 0
+            }
+        }
+        setting_screen_off_delay_seekbar.progress = screenOffDelay
     }
 
     companion object {
