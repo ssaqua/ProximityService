@@ -9,12 +9,17 @@ import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
 import dagger.android.DaggerService
 import ss.proximityservice.data.AppStorage
+import ss.proximityservice.data.ProximityDetector
 import ss.proximityservice.settings.NOTIFICATION_DISMISS
+import ss.proximityservice.settings.SCREEN_OFF_DELAY
 import ss.proximityservice.settings.SettingsActivity
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
-class ProximityService : DaggerService() {
+class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
+    private var proximityDetector: ProximityDetector? = null
+
     private val proximityWakeLock: PowerManager.WakeLock? by lazy {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -49,7 +54,7 @@ class ProximityService : DaggerService() {
                     PendingIntent.FLAG_ONE_SHOT)
             val settingsIntent = PendingIntent.getActivity(this, 0,
                     Intent(this, SettingsActivity::class.java),
-                    PendingIntent.FLAG_ONE_SHOT)
+                    PendingIntent.FLAG_UPDATE_CURRENT)
 
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
@@ -82,7 +87,7 @@ class ProximityService : DaggerService() {
                     PendingIntent.FLAG_ONE_SHOT)
             val settingsIntent = PendingIntent.getActivity(this, 0,
                     Intent(this, SettingsActivity::class.java),
-                    PendingIntent.FLAG_ONE_SHOT)
+                    PendingIntent.FLAG_UPDATE_CURRENT)
 
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
@@ -98,7 +103,8 @@ class ProximityService : DaggerService() {
             return notification.build()
         }
 
-    private val handler: Handler = Handler(Looper.getMainLooper())
+    private val mainHandler: Handler = Handler(Looper.getMainLooper())
+    private val proximityHandler: Handler = Handler(Looper.myLooper())
 
     @Inject lateinit var appStorage: AppStorage
 
@@ -110,6 +116,8 @@ class ProximityService : DaggerService() {
                     "Service State", NotificationManager.IMPORTANCE_LOW)
             notificationManager.createNotificationChannel(channel)
         }
+
+        proximityDetector = ProximityDetector(applicationContext, this)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -123,30 +131,44 @@ class ProximityService : DaggerService() {
 
     override fun onDestroy() {
         if (running) stop()
+        proximityDetector?.close()
     }
 
     // binding not supported
     override fun onBind(intent: Intent): IBinder? = null
 
+    override fun onNear() {
+        if (running) {
+            val delay = TimeUnit.SECONDS.toMillis(appStorage.getInt(SCREEN_OFF_DELAY, 0).toLong())
+            proximityHandler.postDelayed({ updateProximitySensorMode(true) }, delay)
+        }
+    }
+
+    override fun onFar() {
+        if (running) {
+            proximityHandler.removeCallbacksAndMessages(null)
+            updateProximitySensorMode(false)
+        }
+    }
+
     private fun start() {
         proximityWakeLock?.let {
-            if (it.isHeld) {
-                handler.post { toast("Proximity Service is already active") }
+            if (it.isHeld or running) {
+                mainHandler.post { toast("Proximity Service is already active") }
             } else {
-                handler.post { toast("Proximity Service started") }
+                mainHandler.post { toast("Proximity Service started") }
                 startForeground(NOTIFICATION_ID, runningNotification)
-                updateProximitySensorMode(true)
                 running = true
                 LocalBroadcastManager.getInstance(this)
                         .sendBroadcast(Intent(SettingsActivity.INTENT_SET_ACTIVE_ACTION))
             }
         } ?: run {
-            handler.post { toast("Proximity WakeLock not supported on this device") }
+            mainHandler.post { toast("Proximity WakeLock not supported on this device") }
         }
     }
 
     private fun stop() {
-        handler.post { toast("Proximity Service stopped") }
+        mainHandler.post { toast("Proximity Service stopped") }
         updateProximitySensorMode(false)
         running = false
         LocalBroadcastManager.getInstance(this)
