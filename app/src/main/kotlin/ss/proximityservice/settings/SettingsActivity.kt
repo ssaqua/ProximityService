@@ -10,17 +10,18 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.StackingBehavior
-
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import ss.proximityservice.ProximityService
 import ss.proximityservice.R
+import ss.proximityservice.data.AppStorage
+import javax.inject.Inject
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : DaggerAppCompatActivity() {
     private val stateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
@@ -30,6 +31,8 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
     }
+
+    @Inject lateinit var appStorage: AppStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +67,16 @@ class SettingsActivity : AppCompatActivity() {
                     .negativeText(R.string.retain)
                     .btnStackedGravity(GravityEnum.START)
                     .stackingBehavior(StackingBehavior.ALWAYS)
-                    .onAny { _, which -> /* TODO */ }
+                    .onAny { _, which -> when (which.name) {
+                        "POSITIVE" -> {
+                            appStorage.put(NOTIFICATION_DISMISS, true)
+                            notification_behavior_secondary_text.text = getString(R.string.settings_notification_behavior_secondary_dismiss)
+                        }
+                        "NEGATIVE" -> {
+                            appStorage.put(NOTIFICATION_DISMISS, false)
+                            notification_behavior_secondary_text.text = getString(R.string.settings_notification_behavior_secondary_retain)
+                        }
+                    }}
                     .show()
         }
     }

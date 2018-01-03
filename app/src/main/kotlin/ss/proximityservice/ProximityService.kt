@@ -7,10 +7,14 @@ import android.os.*
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
+import dagger.android.DaggerService
+import ss.proximityservice.data.AppStorage
+import ss.proximityservice.settings.NOTIFICATION_DISMISS
 import ss.proximityservice.settings.SettingsActivity
 import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 
-class ProximityService : Service() {
+class ProximityService : DaggerService() {
     private val proximityWakeLock: PowerManager.WakeLock? by lazy {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -96,6 +100,8 @@ class ProximityService : Service() {
 
     private val handler: Handler = Handler(Looper.getMainLooper())
 
+    @Inject lateinit var appStorage: AppStorage
+
     override fun onCreate() {
         super.onCreate()
 
@@ -146,8 +152,10 @@ class ProximityService : Service() {
         LocalBroadcastManager.getInstance(this)
                 .sendBroadcast(Intent(SettingsActivity.INTENT_SET_INACTIVE_ACTION))
         stopSelf()
-        // TODO: conditionally post the stopped notification
-        notificationManager.notify(NOTIFICATION_ID, stoppedNotification)
+
+        if (!appStorage.getBoolean(NOTIFICATION_DISMISS, true)) {
+            notificationManager.notify(NOTIFICATION_ID, stoppedNotification)
+        }
     }
 
     private fun updateProximitySensorMode(on: Boolean) {

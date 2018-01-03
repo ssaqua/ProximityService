@@ -146,11 +146,12 @@
                 android:text="@string/settings_notification_behavior_title" />
 
             <TextView
+                android:id="@+id/notification_behavior_secondary_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
                 android:textSize="@dimen/list_secondary_text"
-                android:text="@string/settings_notification_behavior_secondary" />
+                android:text="@string/settings_notification_behavior_secondary_dismiss" />
 
         </LinearLayout>
 

@@ -7,7 +7,8 @@
     <string name="notification_action_stop">Stop</string>
     <string name="settings_subheader">Settings</string>
     <string name="settings_notification_behavior_title">Notification behavior</string>
-    <string name="settings_notification_behavior_secondary">Stop and dismiss</string>
+    <string name="settings_notification_behavior_secondary_dismiss">Stop and dismiss</string>
+    <string name="settings_notification_behavior_secondary_retain">Stop and retain</string>
     <string name="settings_notification_behavior_description">Select whether to dismiss or retain the Proximity Service notification when stopping the service.</string>
     <string name="settings_service_mode">Service mode</string>
     <string name="settings_service_mode_secondary">Proximity sensor wakelock</string>
