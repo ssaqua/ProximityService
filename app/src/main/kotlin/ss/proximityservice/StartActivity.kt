@@ -3,6 +3,7 @@ package ss.proximityservice
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
 class StartActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {

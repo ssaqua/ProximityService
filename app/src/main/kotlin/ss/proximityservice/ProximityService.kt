@@ -73,7 +73,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 // using CATEGORY_TRANSPORT instead of CATEGORY_SERVICE as a workaround for
                 // Nova Launcher's notification badges and notification content in the popup
-                // menu (added in 5.2)
+                // options (added in 5.2)
                 notification.setCategory(Notification.CATEGORY_TRANSPORT)
             }
 
