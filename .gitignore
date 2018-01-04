@@ -1,4 +1,5 @@
 keystore.properties
+/app/release
 
 .DS_Store
 .idea
