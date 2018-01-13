@@ -106,6 +106,10 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
     private val mainHandler: Handler = Handler(Looper.getMainLooper())
     private val proximityHandler: Handler = Handler(Looper.myLooper())
 
+    private val broadcastManager: LocalBroadcastManager by lazy {
+        LocalBroadcastManager.getInstance(this)
+    }
+
     @Inject lateinit var appStorage: AppStorage
 
     override fun onCreate() {
@@ -159,8 +163,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
                 mainHandler.post { toast("Proximity Service started") }
                 startForeground(NOTIFICATION_ID, runningNotification)
                 running = true
-                LocalBroadcastManager.getInstance(this)
-                        .sendBroadcast(Intent(SettingsActivity.INTENT_SET_ACTIVE_ACTION))
+                broadcastManager.sendBroadcast(Intent(INTENT_NOTIFY_ACTIVE))
             }
         } ?: run {
             mainHandler.post { toast("Proximity WakeLock not supported on this device") }
@@ -171,8 +174,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
         mainHandler.post { toast("Proximity Service stopped") }
         updateProximitySensorMode(false)
         running = false
-        LocalBroadcastManager.getInstance(this)
-                .sendBroadcast(Intent(SettingsActivity.INTENT_SET_INACTIVE_ACTION))
+        broadcastManager.sendBroadcast(Intent(INTENT_NOTIFY_INACTIVE))
         stopSelf()
 
         if (!appStorage.getBoolean(NOTIFICATION_DISMISS, true)) {
@@ -223,6 +225,9 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
         const val INTENT_START_ACTION = "ss.proximityservice.START"
         const val INTENT_STOP_ACTION = "ss.proximityservice.STOP"
+
+        const val INTENT_NOTIFY_ACTIVE = "ss.proximityservice.ACTIVE"
+        const val INTENT_NOTIFY_INACTIVE = "ss.proximityservice.INACTIVE"
 
         private const val CHANNEL_ID = "proximityservice"
 
