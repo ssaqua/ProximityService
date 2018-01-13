@@ -21,6 +21,8 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import ss.proximityservice.ProximityService
+import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_ACTIVE
+import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_INACTIVE
 import ss.proximityservice.R
 import ss.proximityservice.data.AppStorage
 import javax.inject.Inject
@@ -30,8 +32,8 @@ class SettingsActivity : DaggerAppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             when (action) {
-                INTENT_SET_ACTIVE_ACTION -> setActive()
-                INTENT_SET_INACTIVE_ACTION -> setInactive()
+                INTENT_NOTIFY_ACTIVE -> setActive()
+                INTENT_NOTIFY_INACTIVE -> setInactive()
             }
         }
     }
@@ -129,8 +131,8 @@ class SettingsActivity : DaggerAppCompatActivity() {
         updateWithCurrentSettingValues()
 
         val filter = IntentFilter()
-        filter.addAction(INTENT_SET_ACTIVE_ACTION)
-        filter.addAction(INTENT_SET_INACTIVE_ACTION)
+        filter.addAction(INTENT_NOTIFY_ACTIVE)
+        filter.addAction(INTENT_NOTIFY_INACTIVE)
         LocalBroadcastManager.getInstance(this).registerReceiver(stateReceiver, filter)
     }
 
@@ -172,10 +174,5 @@ class SettingsActivity : DaggerAppCompatActivity() {
             }
         }
         setting_screen_off_delay_seekbar.progress = screenOffDelay
-    }
-
-    companion object {
-        const val INTENT_SET_ACTIVE_ACTION = "ss.proximityservice.SET_ACTIVE"
-        const val INTENT_SET_INACTIVE_ACTION = "ss.proximityservice.SET_INACTIVE"
     }
 }

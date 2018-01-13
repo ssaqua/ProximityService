@@ -14,10 +14,21 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true">
+
         <service android:name=".ProximityService">
             <intent-filter>
                 <action android:name="ss.proximityservice.START" />
                 <action android:name="ss.proximityservice.STOP" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".ToggleTileService"
+            android:icon="@drawable/ic_screen_lock_portrait_white_24dp"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
 
