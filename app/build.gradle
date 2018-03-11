@@ -53,11 +53,11 @@ android {
         compile 'com.android.support:recyclerview-v7:27.1.0'
         compile 'com.android.support:support-compat:27.1.0'
         compile 'com.android.support:support-v13:27.1.0'
-        compile 'com.google.dagger:dagger:2.13'
-        kapt 'com.google.dagger:dagger-compiler:2.13'
-        compile 'com.google.dagger:dagger-android:2.13'
-        compile 'com.google.dagger:dagger-android-support:2.13'
-        kapt 'com.google.dagger:dagger-android-processor:2.13'
+        compile 'com.google.dagger:dagger:2.15'
+        kapt 'com.google.dagger:dagger-compiler:2.15'
+        compile 'com.google.dagger:dagger-android:2.15'
+        compile 'com.google.dagger:dagger-android-support:2.15'
+        kapt 'com.google.dagger:dagger-android-processor:2.15'
         implementation 'com.google.android.gms:play-services-oss-licenses:11.8.0'
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     }
