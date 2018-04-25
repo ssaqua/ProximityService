@@ -6,9 +6,6 @@ keystore.properties
 /build
 /captures
 
-third_party_license_metadata
-third_party_licenses
-
 # Created by https://www.gitignore.io/api/intellij,android,java
 
 ### Intellij ###
