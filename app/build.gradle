@@ -48,17 +48,20 @@ android {
     }
 
     dependencies {
+        def support_version = '27.1.1'
+        def dagger_version = '2.16'
+
         implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
-        implementation 'com.android.support:appcompat-v7:27.1.1'
-        implementation 'com.android.support:recyclerview-v7:27.1.1'
-        implementation 'com.android.support:support-compat:27.1.1'
-        implementation 'com.android.support:support-v13:27.1.1'
-        implementation 'com.google.dagger:dagger:2.15'
-        kapt 'com.google.dagger:dagger-compiler:2.15'
-        implementation 'com.google.dagger:dagger-android:2.15'
-        implementation 'com.google.dagger:dagger-android-support:2.15'
-        kapt 'com.google.dagger:dagger-android-processor:2.15'
-        implementation 'com.google.android.gms:play-services-oss-licenses:15.0.0'
+        implementation "com.android.support:appcompat-v7:$support_version"
+        implementation "com.android.support:recyclerview-v7:$support_version"
+        implementation "com.android.support:support-compat:$support_version"
+        implementation "com.android.support:support-v13:$support_version"
+        implementation "com.google.dagger:dagger:$dagger_version"
+        kapt "com.google.dagger:dagger-compiler:$dagger_version"
+        implementation "com.google.dagger:dagger-android:$dagger_version"
+        implementation "com.google.dagger:dagger-android-support:$dagger_version"
+        kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+        implementation 'com.google.android.gms:play-services-oss-licenses:15.0.1'
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     }
 }
