@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <service android:name=".ProximityService">
+        <service android:name=".ProximityService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="ss.proximityservice.START" />
                 <action android:name="ss.proximityservice.STOP" />
