@@ -45,6 +45,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
     }
 
     dependencies {
@@ -63,5 +64,8 @@ android {
         kapt "com.google.dagger:dagger-android-processor:$dagger_version"
         implementation 'com.google.android.gms:play-services-oss-licenses:16.0.0'
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+        testImplementation 'junit:junit:4.12'
+        testImplementation 'org.mockito:mockito-core:2.19.1'
     }
 }

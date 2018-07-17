@@ -17,7 +17,7 @@ class ProximityDetector(private val listener: ProximityListener) : SensorEventLi
         val distance = event.values[0]
         val max = event.sensor.maximumRange
 
-        if (distance < Math.min(max, 8.toFloat())) {
+        if (distance < Math.min(max, 8f)) {
             listener.onNear()
         } else {
             listener.onFar()
