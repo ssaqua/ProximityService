@@ -3,6 +3,8 @@ package ss.proximityservice
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.os.*
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -18,6 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
+
+    private val sensorManager by lazy { applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
     private var proximityDetector: ProximityDetector? = null
 
     private val proximityWakeLock: PowerManager.WakeLock? by lazy {
@@ -121,7 +125,11 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
             notificationManager.createNotificationChannel(channel)
         }
 
-        proximityDetector = ProximityDetector(applicationContext, this)
+        proximityDetector = ProximityDetector(this)
+        val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+        sensor?.let {
+            sensorManager.registerListener(proximityDetector, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -135,7 +143,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     override fun onDestroy() {
         if (running) stop()
-        proximityDetector?.close()
+        sensorManager.unregisterListener(proximityDetector)
     }
 
     // binding not supported

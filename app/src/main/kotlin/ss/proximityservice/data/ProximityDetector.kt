@@ -1,19 +1,14 @@
 package ss.proximityservice.data
 
-import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 
-class ProximityDetector(context: Context, private val listener: ProximityListener) : SensorEventListener {
-    private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+class ProximityDetector(private val listener: ProximityListener) : SensorEventListener {
 
-    private var sensor: Sensor? = null
-
-    init {
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-        sensor?.let { sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL) }
+    interface ProximityListener {
+        fun onNear()
+        fun onFar()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
@@ -27,12 +22,5 @@ class ProximityDetector(context: Context, private val listener: ProximityListene
         } else {
             listener.onFar()
         }
-    }
-
-    fun close() = sensorManager.unregisterListener(this)
-
-    interface ProximityListener {
-        fun onNear()
-        fun onFar()
     }
 }
