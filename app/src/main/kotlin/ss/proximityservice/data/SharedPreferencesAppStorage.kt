@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 
 class SharedPreferencesAppStorage(context: Context, name: String? = null) : AppStorage {
+
     private val preferences: SharedPreferences = if (name == null) {
         PreferenceManager.getDefaultSharedPreferences(context)
     } else {
@@ -38,7 +39,7 @@ class SharedPreferencesAppStorage(context: Context, name: String? = null) : AppS
     @Suppress("UNCHECKED_CAST")
     override fun <T> put(key: String, value: T) {
         when (value) {
-            is String -> preferences.edit().putString(key, value).apply()
+            is String? -> preferences.edit().putString(key, value).apply()
             is Set<*> -> {
                 if (value.all { it is String }) {
                     preferences.edit().putStringSet(key, value as Set<String>).apply()
@@ -52,5 +53,13 @@ class SharedPreferencesAppStorage(context: Context, name: String? = null) : AppS
             is Boolean -> preferences.edit().putBoolean(key, value).apply()
             else -> throw IllegalArgumentException("The supplied value type is not supported.")
         }
+    }
+
+    override fun remove(key: String) {
+        preferences.edit().remove(key).apply()
+    }
+
+    override fun clear() {
+        preferences.edit().clear().apply()
     }
 }

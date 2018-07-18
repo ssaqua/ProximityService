@@ -8,4 +8,6 @@ interface AppStorage {
     fun getFloat(key: String, defValue: Float): Float
     fun getBoolean(key: String, defValue: Boolean): Boolean
     fun <T> put(key: String, value: T)
+    fun remove(key: String)
+    fun clear()
 }
