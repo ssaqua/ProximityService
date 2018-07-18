@@ -9,7 +9,7 @@ import javax.inject.Singleton
 class AppStorageModule {
     @Singleton
     @Provides
-    fun provideSharedPerferencesAppStorage(context: Context) : AppStorage {
+    fun provideSharedPerferencesAppStorage(context: Context): AppStorage {
         return SharedPreferencesAppStorage(context)
     }
 }

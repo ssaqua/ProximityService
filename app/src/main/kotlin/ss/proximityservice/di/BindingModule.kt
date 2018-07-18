@@ -8,8 +8,8 @@ import ss.proximityservice.settings.SettingsActivity
 @Module
 abstract class BindingModule {
     @ContributesAndroidInjector
-    abstract fun settingsActivity() : SettingsActivity
+    abstract fun settingsActivity(): SettingsActivity
 
     @ContributesAndroidInjector
-    abstract fun proximityService() : ProximityService
+    abstract fun proximityService(): ProximityService
 }

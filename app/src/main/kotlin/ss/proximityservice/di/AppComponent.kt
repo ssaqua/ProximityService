@@ -11,16 +11,20 @@ import ss.proximityservice.data.AppStorageModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [
-    AndroidInjectionModule::class,
-    AndroidSupportInjectionModule::class,
-    AppModule::class,
-    AppStorageModule::class,
-    BindingModule::class])
+@Component(
+    modules = [
+        AndroidInjectionModule::class,
+        AndroidSupportInjectionModule::class,
+        AppModule::class,
+        AppStorageModule::class,
+        BindingModule::class]
+)
 interface AppComponent : AndroidInjector<ProximityApplication> {
-    @Component.Builder interface Builder {
+    @Component.Builder
+    interface Builder {
         @BindsInstance
-        fun application(application: Application) : AppComponent.Builder
-        fun build() : AppComponent
+        fun application(application: Application): AppComponent.Builder
+
+        fun build(): AppComponent
     }
 }

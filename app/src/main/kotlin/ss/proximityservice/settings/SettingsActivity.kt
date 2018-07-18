@@ -28,6 +28,7 @@ import ss.proximityservice.data.AppStorage
 import javax.inject.Inject
 
 class SettingsActivity : DaggerAppCompatActivity() {
+
     private val stateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
@@ -38,7 +39,8 @@ class SettingsActivity : DaggerAppCompatActivity() {
         }
     }
 
-    @Inject lateinit var appStorage: AppStorage
+    @Inject
+    lateinit var appStorage: AppStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,53 +49,66 @@ class SettingsActivity : DaggerAppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val taskDescription = ActivityManager.TaskDescription(
-                    getString(R.string.app_name),
-                    BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher),
-                    resources.getColor(R.color.primaryDark)
+                getString(R.string.app_name),
+                BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher),
+                resources.getColor(R.color.primaryDark)
             )
             setTaskDescription(taskDescription)
         }
 
         btn_service_on.setOnClickListener {
-            startService(Intent(this, ProximityService::class.java)
-                    .setAction(ProximityService.INTENT_START_ACTION))
+            startService(
+                Intent(this, ProximityService::class.java)
+                    .setAction(ProximityService.INTENT_START_ACTION)
+            )
             setActive()
         }
 
         btn_service_off.setOnClickListener {
-            startService(Intent(this, ProximityService::class.java)
-                    .setAction(ProximityService.INTENT_STOP_ACTION))
+            startService(
+                Intent(this, ProximityService::class.java)
+                    .setAction(ProximityService.INTENT_STOP_ACTION)
+            )
             setInactive()
         }
 
         setting_notification_behavior.setOnClickListener {
             MaterialDialog.Builder(this)
-                    .title(getString(R.string.settings_notification_behavior_title))
-                    .content(R.string.settings_notification_behavior_description)
-                    .positiveText(R.string.dismiss)
-                    .negativeText(R.string.retain)
-                    .btnStackedGravity(GravityEnum.START)
-                    .stackingBehavior(StackingBehavior.ALWAYS)
-                    .onAny { _, which -> when (which.name) {
+                .title(getString(R.string.settings_notification_behavior_title))
+                .content(R.string.settings_notification_behavior_description)
+                .positiveText(R.string.dismiss)
+                .negativeText(R.string.retain)
+                .btnStackedGravity(GravityEnum.START)
+                .stackingBehavior(StackingBehavior.ALWAYS)
+                .onAny { _, which ->
+                    when (which.name) {
                         "POSITIVE" -> {
                             appStorage.put(NOTIFICATION_DISMISS, true)
-                            notification_behavior_secondary_text.text = getString(R.string.settings_notification_behavior_secondary_dismiss)
+                            notification_behavior_secondary_text.text =
+                                    getString(R.string.settings_notification_behavior_secondary_dismiss)
                         }
                         "NEGATIVE" -> {
                             appStorage.put(NOTIFICATION_DISMISS, false)
-                            notification_behavior_secondary_text.text = getString(R.string.settings_notification_behavior_secondary_retain)
+                            notification_behavior_secondary_text.text =
+                                    getString(R.string.settings_notification_behavior_secondary_retain)
                         }
-                    }}
-                    .show()
+                    }
+                }
+                .show()
         }
 
-        setting_screen_off_delay_seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        setting_screen_off_delay_seekbar.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 when (progress) {
-                    0 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_zero)
-                    1 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_one)
-                    2 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_two)
-                    3 -> screen_off_delay_secondary_text.text = getString(R.string.screen_off_delay_three)
+                    0 -> screen_off_delay_secondary_text.text =
+                            getString(R.string.screen_off_delay_zero)
+                    1 -> screen_off_delay_secondary_text.text =
+                            getString(R.string.screen_off_delay_one)
+                    2 -> screen_off_delay_secondary_text.text =
+                            getString(R.string.screen_off_delay_two)
+                    3 -> screen_off_delay_secondary_text.text =
+                            getString(R.string.screen_off_delay_three)
                 }
             }
 
@@ -157,7 +172,8 @@ class SettingsActivity : DaggerAppCompatActivity() {
 
     private fun updateWithCurrentSettingValues() {
         if (!appStorage.getBoolean(NOTIFICATION_DISMISS, true)) {
-            notification_behavior_secondary_text.text = getString(R.string.settings_notification_behavior_secondary_retain)
+            notification_behavior_secondary_text.text =
+                    getString(R.string.settings_notification_behavior_secondary_retain)
         }
 
         var screenOffDelay = appStorage.getInt(SCREEN_OFF_DELAY, 0)

@@ -53,25 +53,33 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     private val runningNotification: Notification
         get() {
-            val stopIntent = PendingIntent.getService(this, 0,
-                    Intent(this, ProximityService::class.java).setAction(INTENT_STOP_ACTION),
-                    PendingIntent.FLAG_ONE_SHOT)
-            val settingsIntent = PendingIntent.getActivity(this, 0,
-                    Intent(this, SettingsActivity::class.java),
-                    PendingIntent.FLAG_UPDATE_CURRENT)
+            val stopIntent = PendingIntent.getService(
+                this, 0,
+                Intent(this, ProximityService::class.java).setAction(INTENT_STOP_ACTION),
+                PendingIntent.FLAG_ONE_SHOT
+            )
+            val settingsIntent = PendingIntent.getActivity(
+                this, 0,
+                Intent(this, SettingsActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
-                    .setContentTitle(getString(R.string.app_name))
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
+                .setContentTitle(getString(R.string.app_name))
+                .setPriority(NotificationCompat.PRIORITY_LOW)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 notification.setContentText(getString(R.string.notification_running))
-                        .setContentIntent(stopIntent)
-                        .addAction(R.drawable.ic_settings_white_24dp, getString(R.string.notification_action_settings), settingsIntent)
+                    .setContentIntent(stopIntent)
+                    .addAction(
+                        R.drawable.ic_settings_white_24dp,
+                        getString(R.string.notification_action_settings),
+                        settingsIntent
+                    )
             } else {
                 notification.setContentText(getString(R.string.notification_settings))
-                        .setContentIntent(settingsIntent)
+                    .setContentIntent(settingsIntent)
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -86,22 +94,30 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     private val stoppedNotification: Notification
         get() {
-            val startIntent = PendingIntent.getService(this, 0,
-                    Intent(this, ProximityService::class.java).setAction(INTENT_START_ACTION),
-                    PendingIntent.FLAG_ONE_SHOT)
-            val settingsIntent = PendingIntent.getActivity(this, 0,
-                    Intent(this, SettingsActivity::class.java),
-                    PendingIntent.FLAG_UPDATE_CURRENT)
+            val startIntent = PendingIntent.getService(
+                this, 0,
+                Intent(this, ProximityService::class.java).setAction(INTENT_START_ACTION),
+                PendingIntent.FLAG_ONE_SHOT
+            )
+            val settingsIntent = PendingIntent.getActivity(
+                this, 0,
+                Intent(this, SettingsActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText(getString(R.string.notification_stopped))
-                    .setContentIntent(startIntent)
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.notification_stopped))
+                .setContentIntent(startIntent)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
 
             if (Build.VERSION.SDK_INT >= 16) {
-                notification.addAction(R.drawable.ic_settings_white_24dp, getString(R.string.notification_action_settings), settingsIntent)
+                notification.addAction(
+                    R.drawable.ic_settings_white_24dp,
+                    getString(R.string.notification_action_settings),
+                    settingsIntent
+                )
             }
 
             return notification.build()
@@ -114,14 +130,17 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
         LocalBroadcastManager.getInstance(this)
     }
 
-    @Inject lateinit var appStorage: AppStorage
+    @Inject
+    lateinit var appStorage: AppStorage
 
     override fun onCreate() {
         super.onCreate()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID,
-                    "Service State", NotificationManager.IMPORTANCE_LOW)
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Service State", NotificationManager.IMPORTANCE_LOW
+            )
             notificationManager.createNotificationChannel(channel)
         }
 

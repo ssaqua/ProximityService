@@ -16,6 +16,7 @@ import ss.proximityservice.ProximityService.Companion.INTENT_STOP_ACTION
 
 @RequiresApi(Build.VERSION_CODES.N)
 class ToggleTileService : TileService() {
+
     private val stateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             updateTile()
