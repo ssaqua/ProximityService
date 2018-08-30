@@ -9,7 +9,7 @@ Android service for turning off the display using the proximity sensor.
 ## License
 
 
-    Copyright 2016-2018 ssaqua
+    Copyright 2016 ssaqua
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
