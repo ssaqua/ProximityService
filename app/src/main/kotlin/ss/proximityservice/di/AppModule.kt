@@ -1,12 +1,16 @@
 package ss.proximityservice.di
 
 import android.app.Application
-import android.content.Context
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
+import ss.proximityservice.data.AppStorage
+import ss.proximityservice.data.SharedPreferencesAppStorage
+import javax.inject.Singleton
 
 @Module
-abstract class AppModule {
-    @Binds
-    abstract fun bindContext(application: Application): Context
+class AppModule {
+
+    @Singleton
+    @Provides
+    fun provideAppStorage(context: Application): AppStorage = SharedPreferencesAppStorage(context)
 }

@@ -7,7 +7,6 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import ss.proximityservice.ProximityApplication
-import ss.proximityservice.data.AppStorageModule
 import javax.inject.Singleton
 
 @Singleton
@@ -16,7 +15,6 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         AndroidSupportInjectionModule::class,
         AppModule::class,
-        AppStorageModule::class,
         BindingModule::class]
 )
 interface AppComponent : AndroidInjector<ProximityApplication> {
