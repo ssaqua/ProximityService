@@ -6,7 +6,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
-import ss.proximityservice.ProximityApplication
+import ss.proximityservice.TestApplication
 import javax.inject.Singleton
 
 @Singleton
@@ -15,16 +15,16 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         AndroidSupportInjectionModule::class,
         AppModule::class,
-        BindingModule::class
+        TestBindingModule::class
     ]
 )
-interface AppComponent : AndroidInjector<ProximityApplication> {
+interface TestAppComponent : AndroidInjector<TestApplication> {
 
     @Component.Builder
     interface Builder {
         @BindsInstance
         fun application(application: Application): Builder
 
-        fun build(): AppComponent
+        fun build(): TestAppComponent
     }
 }
