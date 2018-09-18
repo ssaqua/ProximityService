@@ -15,10 +15,12 @@ import ss.proximityservice.data.ProximityDetector
 import ss.proximityservice.settings.NOTIFICATION_DISMISS
 import ss.proximityservice.settings.SCREEN_OFF_DELAY
 import ss.proximityservice.settings.SettingsActivity
+import ss.proximityservice.testing.OpenForTesting
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
+@OpenForTesting
 class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     private val sensorManager by lazy { applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
