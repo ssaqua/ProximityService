@@ -13,7 +13,7 @@ class StopActivityTest {
     fun stopsService() {
         val activity = Robolectric.setupActivity(StopActivity::class.java)
         val intent = Shadows.shadowOf(activity).peekNextStartedService()
-        assert(intent.action == ProximityService.INTENT_STOP_ACTION)
+        assert(intent.action == ProximityService.INTENT_ACTION_STOP)
         assert(intent.component.className == ProximityService::class.java.canonicalName)
     }
 }

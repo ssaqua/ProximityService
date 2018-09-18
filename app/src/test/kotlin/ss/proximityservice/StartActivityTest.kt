@@ -13,7 +13,7 @@ class StartActivityTest {
     fun startsService() {
         val activity = setupActivity(StartActivity::class.java)
         val intent = shadowOf(activity).peekNextStartedService()
-        assert(intent.action == ProximityService.INTENT_START_ACTION)
+        assert(intent.action == ProximityService.INTENT_ACTION_START)
         assert(intent.component.className == ProximityService::class.java.canonicalName)
     }
 }

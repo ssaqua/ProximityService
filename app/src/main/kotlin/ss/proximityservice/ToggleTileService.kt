@@ -11,8 +11,8 @@ import android.support.annotation.RequiresApi
 import android.support.v4.content.LocalBroadcastManager
 import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_ACTIVE
 import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_INACTIVE
-import ss.proximityservice.ProximityService.Companion.INTENT_START_ACTION
-import ss.proximityservice.ProximityService.Companion.INTENT_STOP_ACTION
+import ss.proximityservice.ProximityService.Companion.INTENT_ACTION_START
+import ss.proximityservice.ProximityService.Companion.INTENT_ACTION_STOP
 
 @RequiresApi(Build.VERSION_CODES.N)
 class ToggleTileService : TileService() {
@@ -25,7 +25,7 @@ class ToggleTileService : TileService() {
 
     override fun onClick() {
         val intent = Intent(this, ProximityService::class.java)
-        intent.action = if (ProximityService.running) INTENT_STOP_ACTION else INTENT_START_ACTION
+        intent.action = if (ProximityService.isRunning) INTENT_ACTION_STOP else INTENT_ACTION_START
         startService(intent)
         updateTile()
     }
@@ -48,7 +48,7 @@ class ToggleTileService : TileService() {
 
     private fun updateTile() {
         val tile = qsTile
-        tile.state = if (ProximityService.running) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+        tile.state = if (ProximityService.isRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
         tile.updateTile()
     }
 }

@@ -55,7 +55,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
         get() {
             val stopIntent = PendingIntent.getService(
                 this, 0,
-                Intent(this, ProximityService::class.java).setAction(INTENT_STOP_ACTION),
+                Intent(this, ProximityService::class.java).setAction(INTENT_ACTION_STOP),
                 PendingIntent.FLAG_ONE_SHOT
             )
             val settingsIntent = PendingIntent.getActivity(
@@ -96,7 +96,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
         get() {
             val startIntent = PendingIntent.getService(
                 this, 0,
-                Intent(this, ProximityService::class.java).setAction(INTENT_START_ACTION),
+                Intent(this, ProximityService::class.java).setAction(INTENT_ACTION_START),
                 PendingIntent.FLAG_ONE_SHOT
             )
             val settingsIntent = PendingIntent.getActivity(
@@ -154,14 +154,14 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val action = intent.action
         when (action) {
-            INTENT_START_ACTION -> start()
-            INTENT_STOP_ACTION -> stop()
+            INTENT_ACTION_START -> start()
+            INTENT_ACTION_STOP -> stop()
         }
         return Service.START_NOT_STICKY
     }
 
     override fun onDestroy() {
-        if (running) stop()
+        if (isRunning) stop()
         sensorManager.unregisterListener(proximityDetector)
     }
 
@@ -169,14 +169,14 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
     override fun onBind(intent: Intent): IBinder? = null
 
     override fun onNear() {
-        if (running) {
+        if (isRunning) {
             val delay = TimeUnit.SECONDS.toMillis(appStorage.getInt(SCREEN_OFF_DELAY, 0).toLong())
             proximityHandler.postDelayed({ updateProximitySensorMode(true) }, delay)
         }
     }
 
     override fun onFar() {
-        if (running) {
+        if (isRunning) {
             proximityHandler.removeCallbacksAndMessages(null)
             updateProximitySensorMode(false)
         }
@@ -184,12 +184,12 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     private fun start() {
         proximityWakeLock?.let {
-            if (it.isHeld or running) {
+            if (it.isHeld or isRunning) {
                 mainHandler.post { toast("Proximity Service is already active") }
             } else {
                 mainHandler.post { toast("Proximity Service started") }
                 startForeground(NOTIFICATION_ID, runningNotification)
-                running = true
+                isRunning = true
                 broadcastManager.sendBroadcast(Intent(INTENT_NOTIFY_ACTIVE))
             }
         } ?: run {
@@ -200,7 +200,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
     private fun stop() {
         mainHandler.post { toast("Proximity Service stopped") }
         updateProximitySensorMode(false)
-        running = false
+        isRunning = false
         broadcastManager.sendBroadcast(Intent(INTENT_NOTIFY_INACTIVE))
         stopSelf()
 
@@ -250,8 +250,8 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
     companion object {
         private const val TAG = "ProximityService"
 
-        const val INTENT_START_ACTION = "ss.proximityservice.START"
-        const val INTENT_STOP_ACTION = "ss.proximityservice.STOP"
+        const val INTENT_ACTION_START = "ss.proximityservice.START"
+        const val INTENT_ACTION_STOP = "ss.proximityservice.STOP"
 
         const val INTENT_NOTIFY_ACTIVE = "ss.proximityservice.ACTIVE"
         const val INTENT_NOTIFY_INACTIVE = "ss.proximityservice.INACTIVE"
@@ -260,6 +260,6 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
         private const val NOTIFICATION_ID = 1
 
-        var running = false
+        var isRunning = false
     }
 }

@@ -59,7 +59,7 @@ class SettingsActivity : DaggerAppCompatActivity() {
         btn_service_on.setOnClickListener {
             startService(
                 Intent(this, ProximityService::class.java)
-                    .setAction(ProximityService.INTENT_START_ACTION)
+                    .setAction(ProximityService.INTENT_ACTION_START)
             )
             setActive()
         }
@@ -67,7 +67,7 @@ class SettingsActivity : DaggerAppCompatActivity() {
         btn_service_off.setOnClickListener {
             startService(
                 Intent(this, ProximityService::class.java)
-                    .setAction(ProximityService.INTENT_STOP_ACTION)
+                    .setAction(ProximityService.INTENT_ACTION_STOP)
             )
             setInactive()
         }
@@ -137,7 +137,7 @@ class SettingsActivity : DaggerAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!ProximityService.running) {
+        if (!ProximityService.isRunning) {
             setInactive()
         } else {
             setActive()
