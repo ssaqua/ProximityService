@@ -10,12 +10,11 @@ allOpen {
 }
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
     defaultConfig {
         applicationId 'ss.proximityservice'
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 7
         versionName '2.1.0'
         testInstrumentationRunner 'ss.proximityservice.TestRunner'
@@ -63,7 +62,7 @@ android {
     }
 
     dependencies {
-        def support_version = '27.1.1'
+        def support_version = '28.0.0'
         def dagger_version = '2.17'
 
         implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
