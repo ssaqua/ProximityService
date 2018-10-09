@@ -1,10 +1,12 @@
-# ProximityService
+<h1 align="center">ProximityService</h1>
 
-<a href="https://play.google.com/store/apps/details?id=ss.proximityservice">
-  <img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" height="100">
-</a>
+<h4 align="center">Android service for turning off the display using the proximity sensor.</h4>
 
-Android service for turning off the display using the proximity sensor.
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=ss.proximityservice">
+    <img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" height="100">
+  </a>
+</p>
 
 ## License
 
