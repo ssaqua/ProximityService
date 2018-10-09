@@ -7,7 +7,7 @@ import ss.proximityservice.data.AppStorage
 import ss.proximityservice.data.SharedPreferencesAppStorage
 import javax.inject.Singleton
 
-@Module
+@Module(includes = [ViewModelModule::class])
 class AppModule {
 
     @Singleton

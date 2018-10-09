@@ -1,14 +1,15 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -46,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="?android:attr/textColorPrimaryInverse"
-                    android:text="@string/condition_inactive" />
+                    tools:text="@string/condition_inactive" />
 
             </LinearLayout>
 
@@ -63,7 +64,7 @@
                     android:background="@android:color/white" />
 
                 <Button
-                    android:id="@+id/btn_service_on"
+                    android:id="@+id/btn_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -72,22 +73,7 @@
                     android:alpha=".8"
                     android:textAlignment="viewStart"
                     android:textColor="?android:attr/textColorPrimaryInverse"
-                    android:text="@string/button_on"
-                    style="?android:attr/buttonBarButtonStyle"/>
-
-                <Button
-                    android:id="@+id/btn_service_off"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:visibility="gone"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:alpha=".8"
-                    android:textAlignment="viewStart"
-                    android:textColor="?android:attr/textColorPrimaryInverse"
-                    android:text="@string/button_off"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    style="?android:attr/buttonBarButtonStyle" />
 
             </LinearLayout>
 
@@ -126,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
                 android:textSize="@dimen/list_secondary_text"
-                android:text="@string/settings_notification_behavior_secondary_dismiss" />
+                tools:text="@string/settings_notification_behavior_secondary_dismiss" />
 
         </LinearLayout>
 
@@ -172,7 +158,7 @@
                 android:paddingEnd="@dimen/default_padding"
                 android:fontFamily="sans-serif"
                 android:textSize="@dimen/list_secondary_text"
-                android:text="@string/screen_off_delay_zero" />
+                tools:text="@string/screen_off_delay_zero" />
 
         </LinearLayout>
 
