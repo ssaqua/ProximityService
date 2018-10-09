@@ -6,9 +6,9 @@ import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.*
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.android.DaggerService
 import ss.proximityservice.data.AppStorage
 import ss.proximityservice.data.ProximityDetector

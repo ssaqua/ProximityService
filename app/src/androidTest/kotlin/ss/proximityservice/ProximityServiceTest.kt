@@ -3,9 +3,9 @@ package ss.proximityservice
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.support.test.InstrumentationRegistry
-import android.support.test.rule.ServiceTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.InstrumentationRegistry
+import androidx.test.rule.ServiceTestRule
+import androidx.test.runner.AndroidJUnit4
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test

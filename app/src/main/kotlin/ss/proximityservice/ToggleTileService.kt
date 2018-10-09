@@ -7,12 +7,12 @@ import android.content.IntentFilter
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import android.support.annotation.RequiresApi
-import android.support.v4.content.LocalBroadcastManager
-import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_ACTIVE
-import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_INACTIVE
+import androidx.annotation.RequiresApi
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import ss.proximityservice.ProximityService.Companion.INTENT_ACTION_START
 import ss.proximityservice.ProximityService.Companion.INTENT_ACTION_STOP
+import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_ACTIVE
+import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_INACTIVE
 
 @RequiresApi(Build.VERSION_CODES.N)
 class ToggleTileService : TileService() {
@@ -36,9 +36,10 @@ class ToggleTileService : TileService() {
 
     override fun onStartListening() {
         updateTile()
-        val filter = IntentFilter()
-        filter.addAction(INTENT_NOTIFY_ACTIVE)
-        filter.addAction(INTENT_NOTIFY_INACTIVE)
+        val filter = IntentFilter().apply {
+            addAction(INTENT_NOTIFY_ACTIVE)
+            addAction(INTENT_NOTIFY_INACTIVE)
+        }
         LocalBroadcastManager.getInstance(this).registerReceiver(stateReceiver, filter)
     }
 
