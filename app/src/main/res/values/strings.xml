@@ -6,6 +6,11 @@
     <string name="notification_action_settings">Settings</string>
     <string name="notification_action_stop">Stop</string>
     <string name="settings_subheader">Settings</string>
+    <string name="settings_operational_mode_title">Operational mode</string>
+    <string name="settings_operational_mode_secondary_default">Proximity Sensor WakeLock (default)</string>
+    <string name="settings_operational_mode_secondary_amoled_wakelock">AMOLED WakeLock</string>
+    <string name="settings_operational_mode_secondary_amoled_no_wakelock">AMOLED No WakeLock</string>
+    <string name="settings_operational_mode_description">The default option uses the same mechanism to turn the display off as during phone calls. The AMOLED options are only useful on devices with AMOLED screens and can be selected with or without a WakeLock. The WakeLock disables screen timeout as long as the display is being turned off with the proximity sensor.</string>
     <string name="settings_notification_behavior_title">Notification behavior</string>
     <string name="settings_notification_behavior_secondary_dismiss">Stop and dismiss</string>
     <string name="settings_notification_behavior_secondary_retain">Stop and retain</string>

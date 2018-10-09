@@ -49,6 +49,9 @@ class SettingsActivity : DaggerAppCompatActivity() {
 
         viewModel.serviceState.observe(this, Observer(::updateConditionCard))
         viewModel.alert.observe(this, EventObserver { dialog -> dialog.show(this) })
+        viewModel.operationalModeResId.observe(this, Observer { resId ->
+            operational_mode_secondary_text.text = getString(resId)
+        })
         viewModel.notificationBehaviorResId.observe(this, Observer { resId ->
             notification_behavior_secondary_text.text = getString(resId)
         })
@@ -66,6 +69,7 @@ class SettingsActivity : DaggerAppCompatActivity() {
             )
         }
 
+        setting_operational_mode.setOnClickListener { viewModel.operationalModeClick() }
         setting_notification_behavior.setOnClickListener { viewModel.notificationBehaviorClick() }
 
         setting_screen_off_delay_seekbar.setOnSeekBarChangeListener(object :

@@ -16,12 +16,14 @@ import ss.proximityservice.R
 import ss.proximityservice.data.Alert
 import ss.proximityservice.data.AppStorage
 import ss.proximityservice.data.Event
+import ss.proximityservice.data.Mode
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(private val appStorage: AppStorage) : ViewModel() {
 
     private val _serviceState = MutableLiveData<Boolean>()
     private val _alert = MutableLiveData<Event<Alert>>()
+    private val _operationalModeResId = MutableLiveData<Int>()
     private val _notificationBehaviorResId = MutableLiveData<Int>()
     private val _screenOffDelayResId = MutableLiveData<Int>()
     private val _screenOffDelayProgress = MutableLiveData<Int>()
@@ -31,6 +33,9 @@ class SettingsViewModel @Inject constructor(private val appStorage: AppStorage) 
 
     val alert: LiveData<Event<Alert>>
         get() = _alert
+
+    val operationalModeResId: LiveData<Int>
+        get() = _operationalModeResId
 
     val notificationBehaviorResId: LiveData<Int>
         get() = _notificationBehaviorResId
@@ -43,6 +48,17 @@ class SettingsViewModel @Inject constructor(private val appStorage: AppStorage) 
 
     init {
         _serviceState.value = ProximityService.isRunning
+        _operationalModeResId.value =
+                when (appStorage.getInt(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)) {
+                    Mode.DEFAULT.ordinal -> R.string.settings_operational_mode_secondary_default
+                    Mode.AMOLED_WAKELOCK.ordinal -> R.string.settings_operational_mode_secondary_amoled_wakelock
+                    Mode.AMOLED_NO_WAKELOCK.ordinal -> R.string.settings_operational_mode_secondary_amoled_no_wakelock
+                    else -> {
+                        // reset to default
+                        appStorage.put(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)
+                        Mode.DEFAULT.ordinal
+                    }
+                }
         _notificationBehaviorResId.value = if (appStorage.getBoolean(
                 NOTIFICATION_DISMISS,
                 true
@@ -73,6 +89,34 @@ class SettingsViewModel @Inject constructor(private val appStorage: AppStorage) 
 
     fun getNextIntentAction(): String =
         if (ProximityService.isRunning) INTENT_ACTION_STOP else INTENT_ACTION_START
+
+    fun operationalModeClick() {
+        _alert.postValue(Event(object : Alert {
+            override fun show(context: Context) {
+                MaterialDialog.Builder(context)
+                    .title(R.string.settings_operational_mode_title)
+                    .content(R.string.settings_operational_mode_description)
+                    .positiveText(R.string.settings_operational_mode_secondary_default)
+                    .negativeText(R.string.settings_operational_mode_secondary_amoled_wakelock)
+                    .neutralText(R.string.settings_operational_mode_secondary_amoled_no_wakelock)
+                    .btnStackedGravity(GravityEnum.START)
+                    .stackingBehavior(StackingBehavior.ALWAYS)
+                    .onPositive { _, _ ->
+                        appStorage.put(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)
+                        _operationalModeResId.postValue(R.string.settings_operational_mode_secondary_default)
+                    }
+                    .onNegative { _, _ ->
+                        appStorage.put(OPERATIONAL_MODE, Mode.AMOLED_WAKELOCK.ordinal)
+                        _operationalModeResId.postValue(R.string.settings_operational_mode_secondary_amoled_wakelock)
+                    }
+                    .onNeutral { _, _ ->
+                        appStorage.put(OPERATIONAL_MODE, Mode.AMOLED_NO_WAKELOCK.ordinal)
+                        _operationalModeResId.postValue(R.string.settings_operational_mode_secondary_amoled_no_wakelock)
+                    }
+                    .show()
+            }
+        }))
+    }
 
     fun notificationBehaviorClick() {
         _alert.postValue(Event(object : Alert {

@@ -11,6 +11,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import ss.proximityservice.ProximityService
 import ss.proximityservice.data.AppStorage
+import ss.proximityservice.data.Mode
 
 @RunWith(MockitoJUnitRunner::class)
 class SettingsViewModelTest {
@@ -53,6 +54,13 @@ class SettingsViewModelTest {
     fun `screenOffDelayUpdate() should store the input progress Int`() {
         viewModel.screenOffDelayUpdate(1)
         verify(appStorage).put(SCREEN_OFF_DELAY, 1)
+    }
+
+    @Test
+    fun `appStorage operational mode should be reset to default if stored value is not a known value`() {
+        `when`(appStorage.getInt(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)).thenReturn(Int.MAX_VALUE)
+        viewModel = SettingsViewModel(appStorage)
+        verify(appStorage).put(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)
     }
 
     @Test

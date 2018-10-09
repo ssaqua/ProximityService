@@ -87,6 +87,41 @@
             android:text="@string/settings_subheader" />
 
         <LinearLayout
+            android:id="@+id/setting_operational_mode"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_two_line_height"
+            android:gravity="center"
+            android:paddingStart="@dimen/default_padding"
+            android:paddingEnd="@dimen/default_padding"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="@dimen/list_primary_text"
+                android:text="@string/settings_operational_mode_title" />
+
+            <TextView
+                android:id="@+id/operational_mode_secondary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:textSize="@dimen/list_secondary_text"
+                tools:text="@string/settings_operational_mode_secondary_default" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dividerBlack" />
+
+        <LinearLayout
             android:id="@+id/setting_notification_behavior"
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_two_line_height"
