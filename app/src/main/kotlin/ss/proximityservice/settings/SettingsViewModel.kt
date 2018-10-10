@@ -144,9 +144,12 @@ class SettingsViewModel @Inject constructor(private val appStorage: AppStorage) 
     fun screenOffDelayProgress(progress: Int) {
         when (progress) {
             0 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_zero)
-            1 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_one)
-            2 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_two)
-            3 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_three)
+            1 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_zero_half)
+            2 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_one)
+            3 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_one_half)
+            4 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_two)
+            5 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_two_half)
+            6 -> _screenOffDelayResId.postValue(R.string.screen_off_delay_three)
         }
     }
 

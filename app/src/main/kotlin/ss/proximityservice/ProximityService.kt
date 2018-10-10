@@ -193,7 +193,16 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     override fun onNear() {
         if (isRunning) {
-            val delay = TimeUnit.SECONDS.toMillis(appStorage.getInt(SCREEN_OFF_DELAY, 0).toLong())
+            val delay = when (appStorage.getInt(SCREEN_OFF_DELAY, 0)) {
+                0 -> 0L
+                1 -> 500L
+                2 -> 1000L
+                3 -> 1500L
+                4 -> 2000L
+                5 -> 2500L
+                6 -> 3000L
+                else -> 0L
+            }
             proximityHandler.postDelayed({ updateProximitySensorMode(true) }, delay)
         }
     }

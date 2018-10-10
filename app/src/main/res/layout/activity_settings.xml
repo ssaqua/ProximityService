@@ -190,7 +190,7 @@
                 android:layout_marginRight="@dimen/default_padding"
                 android:layout_marginStart="@dimen/half_padding"
                 android:layout_marginEnd="@dimen/default_padding"
-                android:max="3"
+                android:max="6"
                 style="@style/Widget.AppCompat.SeekBar.Discrete" />
 
             <androidx.appcompat.widget.AppCompatTextView
