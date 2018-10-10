@@ -3,16 +3,25 @@ package ss.proximityservice
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.graphics.PixelFormat
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import android.net.Uri
 import android.os.*
+import android.provider.Settings
+import android.view.LayoutInflater
+import android.view.View
+import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.android.DaggerService
 import ss.proximityservice.data.AppStorage
+import ss.proximityservice.data.Mode
 import ss.proximityservice.data.ProximityDetector
 import ss.proximityservice.settings.NOTIFICATION_DISMISS
+import ss.proximityservice.settings.OPERATIONAL_MODE
 import ss.proximityservice.settings.SCREEN_OFF_DELAY
 import ss.proximityservice.settings.SettingsActivity
 import ss.proximityservice.testing.OpenForTesting
@@ -24,7 +33,19 @@ import javax.inject.Inject
 class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     private val sensorManager by lazy { applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
+    private val windowManager by lazy { applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager }
+    private val layoutInflater by lazy { applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater }
     private var proximityDetector: ProximityDetector? = null
+    private val frameLayout by lazy { FrameLayout(this) }
+    private var overlay: View? = null
+    private val overlayFlags by lazy {
+        (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
 
     private val proximityWakeLock: PowerManager.WakeLock? by lazy {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -212,19 +233,84 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
     }
 
     private fun updateProximitySensorMode(on: Boolean) {
-        proximityWakeLock?.let {
-            synchronized(it) {
+        val operationalMode = appStorage.getInt(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)
+        when (operationalMode) {
+            Mode.DEFAULT.ordinal -> updateDefaultMode(on)
+            Mode.AMOLED_WAKELOCK.ordinal -> updateAMOLEDMode(
+                on,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+            )
+            Mode.AMOLED_NO_WAKELOCK.ordinal -> updateAMOLEDMode(on)
+        }
+    }
+
+    private fun updateDefaultMode(on: Boolean) {
+        overlay?.let {
+            updateAMOLEDMode(false)
+            updateKeyguardMode(true)
+        }
+        proximityWakeLock?.let { wakeLock ->
+            synchronized(wakeLock) {
                 if (on) {
-                    if (!it.isHeld) {
-                        it.acquire()
+                    if (!wakeLock.isHeld) {
+                        wakeLock.acquire()
                         updateKeyguardMode(false)
                     }
                 } else {
-                    if (it.isHeld) {
-                        it.release()
+                    if (wakeLock.isHeld) {
+                        wakeLock.release()
                         updateKeyguardMode(true)
                     }
                 }
+            }
+        }
+    }
+
+    private fun updateAMOLEDMode(on: Boolean, flags: Int = 0) {
+        proximityWakeLock?.let { wakeLock ->
+            if (wakeLock.isHeld) {
+                wakeLock.release()
+                updateKeyguardMode(true)
+            }
+        }
+        if (on && !checkDrawOverlaySetting()) return
+        synchronized(this) {
+            if (on) {
+                if (overlay == null) {
+                    overlay = layoutInflater.inflate(R.layout.overlay, frameLayout)
+                    overlay?.systemUiVisibility = overlayFlags
+
+                    // simulate SYSTEM_UI_FLAG_IMMERSIVE_STICKY for devices below API 19
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                        overlay?.setOnSystemUiVisibilityChangeListener { visibility ->
+                            if ((visibility and View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                                proximityHandler.postDelayed({
+                                    overlay?.systemUiVisibility = overlayFlags
+                                }, 2000)
+                            }
+                        }
+                    }
+                    windowManager.addView(
+                        overlay,
+                        WindowManager.LayoutParams(
+                            WindowManager.LayoutParams.MATCH_PARENT,
+                            WindowManager.LayoutParams.MATCH_PARENT,
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_SYSTEM_ALERT else WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                            flags,
+                            PixelFormat.TRANSLUCENT
+                        )
+                    )
+                    updateKeyguardMode(true)
+                }
+            } else {
+                overlay?.let {
+                    it.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+                    windowManager.removeView(overlay)
+                    overlay = null
+                }
+                updateKeyguardMode(false)
             }
         }
     }
@@ -245,12 +331,27 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
         }
     }
 
+    private fun checkDrawOverlaySetting(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true
+        val canDrawOverlays = Settings.canDrawOverlays(this)
+        if (!canDrawOverlays) {
+            startActivity(
+                Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName")
+                ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
+            toast("AMOLED mode requires the permission for drawing over other apps / appear on top to be turned on")
+        }
+        return canDrawOverlays
+    }
+
     private fun toast(text: String) {
         Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
-        private const val TAG = "ProximityService"
+        private const val TAG = "ProximityService:ProximitySensorWakeLock"
 
         const val INTENT_ACTION_START = "ss.proximityservice.START"
         const val INTENT_ACTION_STOP = "ss.proximityservice.STOP"
