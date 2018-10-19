@@ -1,6 +1,12 @@
-<h1 align="center">ProximityService</h1>
+<h1 align="center"><img src="/app/src/main/ic_launcher-web.png" align="top" height="40">ProximityService</h1>
 
 <h4 align="center">Android service for turning off the display using the proximity sensor.</h4>
+
+<p align="center">
+  <a href="https://circleci.com/gh/ssaqua/ProximityService">
+    <img src="https://circleci.com/gh/ssaqua/ProximityService.svg?style=shield">
+  </a>
+</p>
 
 <p align="center">
   <a href="https://play.google.com/store/apps/details?id=ss.proximityservice">
