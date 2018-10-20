@@ -20,3 +20,13 @@ jobs:
           destination: reports
       - store_test_results:
           path: app/build/test-results
+      - run: |
+          ./gradlew :app:assembleDebug :app:assembleDebugAndroidTest
+          echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud firebase test android run
+            --app ./app/build/outputs/apk/debug/app-debug.apk
+            --test ./app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+            --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
+          gsutil -m cp -r -U `gsutil ls gs://cloud-test-${GOOGLE_PROJECT_ID} | tail -1` ${CIRCLE_ARTIFACTS}/ | true
