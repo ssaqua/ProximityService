@@ -30,4 +30,7 @@ jobs:
             --app ./app/build/outputs/apk/debug/app-debug.apk \
             --test ./app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
-          gsutil -m cp -r -U `gsutil ls gs://cloud-test-${GOOGLE_PROJECT_ID} | tail -1` ${CIRCLE_ARTIFACTS}/ | true
+          mkdir cloud-test
+          gsutil -m cp -r -U `gsutil ls gs://cloud-test-${GOOGLE_PROJECT_ID} | tail -1` cloud-test/ | true
+      - store_artifacts:
+          path: cloud-test
