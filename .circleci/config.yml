@@ -34,3 +34,4 @@ jobs:
           gsutil -m cp -r -U `gsutil ls gs://cloud-test-${GOOGLE_PROJECT_ID} | tail -1` cloud-test/ | true
       - store_artifacts:
           path: cloud-test
+          destination: firebase
