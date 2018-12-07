@@ -25,7 +25,6 @@ import ss.proximityservice.settings.OPERATIONAL_MODE
 import ss.proximityservice.settings.SCREEN_OFF_DELAY
 import ss.proximityservice.settings.SettingsActivity
 import ss.proximityservice.testing.OpenForTesting
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
@@ -288,6 +287,17 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
                 if (overlay == null) {
                     overlay = layoutInflater.inflate(R.layout.overlay, frameLayout)
                     overlay?.systemUiVisibility = overlayFlags
+                    val params = WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_SYSTEM_ALERT else WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                        flags,
+                        PixelFormat.TRANSLUCENT
+                    )
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        params.layoutInDisplayCutoutMode =
+                                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                    }
 
                     // simulate SYSTEM_UI_FLAG_IMMERSIVE_STICKY for devices below API 19
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -299,16 +309,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
                             }
                         }
                     }
-                    windowManager.addView(
-                        overlay,
-                        WindowManager.LayoutParams(
-                            WindowManager.LayoutParams.MATCH_PARENT,
-                            WindowManager.LayoutParams.MATCH_PARENT,
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_SYSTEM_ALERT else WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                            flags,
-                            PixelFormat.TRANSLUCENT
-                        )
-                    )
+                    windowManager.addView(overlay, params)
                     updateKeyguardMode(true)
                 }
             } else {
