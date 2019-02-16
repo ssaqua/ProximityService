@@ -56,7 +56,7 @@ class SettingsViewModel @Inject constructor(private val appStorage: AppStorage) 
                     else -> {
                         // reset to default
                         appStorage.put(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)
-                        Mode.DEFAULT.ordinal
+                        R.string.settings_operational_mode_secondary_default
                     }
                 }
         _notificationBehaviorResId.value = if (appStorage.getBoolean(
