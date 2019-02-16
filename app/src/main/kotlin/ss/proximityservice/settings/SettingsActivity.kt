@@ -1,5 +1,6 @@
 package ss.proximityservice.settings
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -50,12 +51,15 @@ class SettingsActivity : DaggerAppCompatActivity() {
         viewModel.serviceState.observe(this, Observer(::updateConditionCard))
         viewModel.alert.observe(this, EventObserver { dialog -> dialog.show(this) })
         viewModel.operationalModeResId.observe(this, Observer { resId ->
+            @SuppressLint("ResourceType")
             operational_mode_secondary_text.text = getString(resId)
         })
         viewModel.notificationBehaviorResId.observe(this, Observer { resId ->
+            @SuppressLint("ResourceType")
             notification_behavior_secondary_text.text = getString(resId)
         })
         viewModel.screenOffDelayResId.observe(this, Observer { resId ->
+            @SuppressLint("ResourceType")
             screen_off_delay_secondary_text.text = getString(resId)
         })
         viewModel.screenOffDelayProgress.observe(this, Observer { progress ->
