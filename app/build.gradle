@@ -77,6 +77,8 @@ android {
         kapt "com.google.dagger:dagger-android-processor:$dagger_version"
         implementation 'com.google.android.gms:play-services-oss-licenses:16.0.2'
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+        releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 
         testImplementation 'junit:junit:4.12'
         testImplementation 'androidx.arch.core:core-testing:2.0.0'
