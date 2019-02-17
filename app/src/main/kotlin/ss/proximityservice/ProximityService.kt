@@ -1,6 +1,7 @@
 package ss.proximityservice
 
 import android.app.*
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
@@ -9,6 +10,7 @@ import android.hardware.SensorManager
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
+import android.service.quicksettings.TileService
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -221,6 +223,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
                 mainHandler.post { toast("Proximity Service started") }
                 startForeground(NOTIFICATION_ID, runningNotification)
                 isRunning = true
+                requestTileUpdate()
                 broadcastManager.sendBroadcast(Intent(INTENT_NOTIFY_ACTIVE))
             }
         } ?: run {
@@ -232,11 +235,18 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
         mainHandler.post { toast("Proximity Service stopped") }
         updateProximitySensorMode(false)
         isRunning = false
+        requestTileUpdate()
         broadcastManager.sendBroadcast(Intent(INTENT_NOTIFY_INACTIVE))
         stopSelf()
 
         if (!appStorage.getBoolean(NOTIFICATION_DISMISS, true)) {
             notificationManager.notify(NOTIFICATION_ID, stoppedNotification)
+        }
+    }
+
+    private fun requestTileUpdate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            TileService.requestListeningState(this, ComponentName(this, ToggleTileService::class.java))
         }
     }
 
@@ -296,7 +306,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
                     )
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         params.layoutInDisplayCutoutMode =
-                                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
                     }
 
                     // simulate SYSTEM_UI_FLAG_IMMERSIVE_STICKY for devices below API 19
