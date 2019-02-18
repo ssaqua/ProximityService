@@ -49,16 +49,16 @@ class SettingsViewModel @Inject constructor(private val appStorage: AppStorage) 
     init {
         _serviceState.value = ProximityService.isRunning
         _operationalModeResId.value =
-                when (appStorage.getInt(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)) {
-                    Mode.DEFAULT.ordinal -> R.string.settings_operational_mode_secondary_default
-                    Mode.AMOLED_WAKELOCK.ordinal -> R.string.settings_operational_mode_secondary_amoled_wakelock
-                    Mode.AMOLED_NO_WAKELOCK.ordinal -> R.string.settings_operational_mode_secondary_amoled_no_wakelock
-                    else -> {
-                        // reset to default
-                        appStorage.put(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)
-                        R.string.settings_operational_mode_secondary_default
-                    }
+            when (appStorage.getInt(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)) {
+                Mode.DEFAULT.ordinal -> R.string.settings_operational_mode_secondary_default
+                Mode.AMOLED_WAKELOCK.ordinal -> R.string.settings_operational_mode_secondary_amoled_wakelock
+                Mode.AMOLED_NO_WAKELOCK.ordinal -> R.string.settings_operational_mode_secondary_amoled_no_wakelock
+                else -> {
+                    // reset to default
+                    appStorage.put(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)
+                    R.string.settings_operational_mode_secondary_default
                 }
+            }
         _notificationBehaviorResId.value = if (appStorage.getBoolean(
                 NOTIFICATION_DISMISS,
                 true
