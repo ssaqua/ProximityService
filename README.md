@@ -1,4 +1,4 @@
-<h1 align="center"><img src="/app/src/main/ic_launcher-web.png" align="top" height="40">ProximityService</h1>
+<h1 align="center"><img src="/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" align="top" height="40">ProximityService</h1>
 
 <h4 align="center">Android service for turning off the display using the proximity sensor.</h4>
 
