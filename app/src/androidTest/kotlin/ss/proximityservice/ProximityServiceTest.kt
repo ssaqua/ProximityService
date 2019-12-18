@@ -3,9 +3,9 @@ package ss.proximityservice
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import androidx.test.InstrumentationRegistry
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ServiceTestRule
-import androidx.test.runner.AndroidJUnit4
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -22,15 +22,13 @@ class ProximityServiceTest {
 
     @Test(expected = TimeoutException::class)
     fun bindingNotSupported() {
-        val intent =
-            Intent(InstrumentationRegistry.getTargetContext(), ProximityService::class.java)
+        val intent = Intent(getApplicationContext(), ProximityService::class.java)
         rule.bindService(intent)
     }
 
     @Test
     fun handleStartAction() {
-        val intent =
-            Intent(InstrumentationRegistry.getTargetContext(), TestProximityService::class.java)
+        val intent = Intent(getApplicationContext(), TestProximityService::class.java)
         intent.action = ProximityService.INTENT_ACTION_START
         rule.startService(intent)
         assertTrue(ProximityService.isRunning)
