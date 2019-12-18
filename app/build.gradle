@@ -61,6 +61,15 @@ android {
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
     dependencies {
         def dagger_version = '2.23.2'
 
