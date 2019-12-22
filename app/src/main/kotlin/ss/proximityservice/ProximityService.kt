@@ -296,7 +296,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
                     )
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         params.layoutInDisplayCutoutMode =
-                                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
                     }
 
                     // simulate SYSTEM_UI_FLAG_IMMERSIVE_STICKY for devices below API 19
