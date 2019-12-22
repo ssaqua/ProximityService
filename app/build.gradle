@@ -92,11 +92,11 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-3'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'androidx.arch.core:core-testing:2.0.1'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
     testImplementation 'androidx.test:core-ktx:1.2.0'
     testImplementation 'androidx.test.ext:junit-ktx:1.1.1'
     testImplementation 'com.google.truth:truth:1.0'
-    testImplementation 'org.mockito:mockito-core:2.27.0'
+    testImplementation 'org.mockito:mockito-core:3.2.0'
     testImplementation 'org.robolectric:robolectric:4.3.1'
 
     androidTestImplementation 'androidx.test:rules:1.2.0'
