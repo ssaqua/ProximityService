@@ -174,8 +174,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val action = intent.action
-        when (action) {
+        when (intent.action) {
             INTENT_ACTION_START -> start()
             INTENT_ACTION_STOP -> stop()
         }
@@ -241,8 +240,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
     }
 
     private fun updateProximitySensorMode(on: Boolean) {
-        val operationalMode = appStorage.getInt(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)
-        when (operationalMode) {
+        when (appStorage.getInt(OPERATIONAL_MODE, Mode.DEFAULT.ordinal)) {
             Mode.DEFAULT.ordinal -> updateDefaultMode(on)
             Mode.AMOLED_WAKELOCK.ordinal -> updateAMOLEDMode(
                 on,
