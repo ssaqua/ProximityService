@@ -2,15 +2,23 @@ package ss.proximityservice
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Bundle
+import android.os.Build
 
 class StopActivity : Activity() {
+    override fun onResume() {
+        super.onResume()
+        stopProximityService()
+        finish()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun stopProximityService() {
         val intent = Intent(this, ProximityService::class.java)
             .setAction(ProximityService.INTENT_ACTION_STOP)
-        startService(intent)
-        finish()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
     }
 }

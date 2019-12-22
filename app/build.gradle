@@ -94,13 +94,15 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.arch.core:core-testing:2.0.1'
+    testImplementation 'androidx.test:core-ktx:1.2.0'
+    testImplementation 'androidx.test.ext:junit-ktx:1.1.1'
+    testImplementation 'com.google.truth:truth:1.0'
     testImplementation 'org.mockito:mockito-core:2.27.0'
-    testImplementation 'org.robolectric:robolectric:4.3'
+    testImplementation 'org.robolectric:robolectric:4.3.1'
 
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.1'
     androidTestImplementation 'androidx.test:core-ktx:1.2.0'
-    androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 }
