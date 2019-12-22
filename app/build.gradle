@@ -77,12 +77,11 @@ android {
 dependencies {
     def dagger_version = '2.23.2'
 
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.core:core:1.0.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core:1.1.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.preference:preference:1.1.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
