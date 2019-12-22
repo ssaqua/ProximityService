@@ -17,8 +17,8 @@ android {
         applicationId 'ss.proximityservice'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 10
-        versionName '2.2.2'
+        versionCode 11
+        versionName '2.2.3'
         testInstrumentationRunner 'ss.proximityservice.TestRunner'
     }
 
