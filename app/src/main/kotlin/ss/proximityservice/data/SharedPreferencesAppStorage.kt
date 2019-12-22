@@ -2,7 +2,7 @@ package ss.proximityservice.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 
 class SharedPreferencesAppStorage(context: Context, name: String? = null) : AppStorage {
 
@@ -16,8 +16,8 @@ class SharedPreferencesAppStorage(context: Context, name: String? = null) : AppS
         return preferences.getString(key, defValue)
     }
 
-    override fun getStringSet(key: String, defValues: Set<String>): Set<String> {
-        return preferences.getStringSet(key, defValues)
+    override fun getStringSet(key: String, defValues: Set<String>): Set<String>? {
+        return preferences.getStringSet(key, defValues)?.toSet()
     }
 
     override fun getInt(key: String, defValue: Int): Int {

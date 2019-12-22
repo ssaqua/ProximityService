@@ -10,13 +10,13 @@ allOpen {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion = '29.0.2'
 
     defaultConfig {
         applicationId 'ss.proximityservice'
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 10
         versionName '2.2.2'
         testInstrumentationRunner 'ss.proximityservice.TestRunner'
@@ -81,6 +81,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core:1.0.2'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.preference:preference:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation "com.google.dagger:dagger:$dagger_version"
