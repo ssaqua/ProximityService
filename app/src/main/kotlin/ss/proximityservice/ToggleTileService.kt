@@ -9,8 +9,6 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import ss.proximityservice.ProximityService.Companion.INTENT_ACTION_START
-import ss.proximityservice.ProximityService.Companion.INTENT_ACTION_STOP
 import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_ACTIVE
 import ss.proximityservice.ProximityService.Companion.INTENT_NOTIFY_INACTIVE
 
@@ -24,9 +22,12 @@ class ToggleTileService : TileService() {
     }
 
     override fun onClick() {
-        val intent = Intent(this, ProximityService::class.java)
-        intent.action = if (ProximityService.isRunning) INTENT_ACTION_STOP else INTENT_ACTION_START
-        startService(intent)
+        val activityClass = if (ProximityService.isRunning) {
+            StopActivity::class.java
+        } else {
+            StartActivity::class.java
+        }
+        startActivity(Intent(this, activityClass).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         updateTile()
     }
 
