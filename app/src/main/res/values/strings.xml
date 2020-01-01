@@ -34,4 +34,5 @@
     <string name="screen_off_delay_two_half">2.5 seconds</string>
     <string name="screen_off_delay_three">3 seconds</string>
     <string name="open_source_licenses">Open source licenses</string>
+    <string name="service_state_notification_channel">Service State</string>
 </resources>

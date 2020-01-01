@@ -69,81 +69,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     private val keyguardDisableCount: AtomicInteger = AtomicInteger(0)
 
-    private val notificationManager: NotificationManager by lazy {
-        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
-
-    private val runningNotification: Notification
-        get() {
-            val stopIntent = PendingIntent.getService(
-                this, 0,
-                Intent(this, ProximityService::class.java).setAction(INTENT_ACTION_STOP),
-                PendingIntent.FLAG_ONE_SHOT
-            )
-            val settingsIntent = PendingIntent.getActivity(
-                this, 0,
-                Intent(this, SettingsActivity::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
-            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
-                .setContentTitle(getString(R.string.app_name))
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                notification.setContentText(getString(R.string.notification_running))
-                    .setContentIntent(stopIntent)
-                    .addAction(
-                        R.drawable.ic_settings_white_24dp,
-                        getString(R.string.notification_action_settings),
-                        settingsIntent
-                    )
-            } else {
-                notification.setContentText(getString(R.string.notification_settings))
-                    .setContentIntent(settingsIntent)
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                // using CATEGORY_TRANSPORT instead of CATEGORY_SERVICE as a workaround for
-                // Nova Launcher's notification badges and notification content in the popup
-                // options (added in 5.2)
-                notification.setCategory(Notification.CATEGORY_TRANSPORT)
-            }
-
-            return notification.build()
-        }
-
-    private val stoppedNotification: Notification
-        get() {
-            val startIntent = PendingIntent.getService(
-                this, 0,
-                Intent(this, ProximityService::class.java).setAction(INTENT_ACTION_START),
-                PendingIntent.FLAG_ONE_SHOT
-            )
-            val settingsIntent = PendingIntent.getActivity(
-                this, 0,
-                Intent(this, SettingsActivity::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
-            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.notification_stopped))
-                .setContentIntent(startIntent)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-
-            if (Build.VERSION.SDK_INT >= 16) {
-                notification.addAction(
-                    R.drawable.ic_settings_white_24dp,
-                    getString(R.string.notification_action_settings),
-                    settingsIntent
-                )
-            }
-
-            return notification.build()
-        }
+    private val notificationHelper: NotificationHelper by lazy { NotificationHelper(applicationContext) }
 
     private val mainHandler: Handler = Handler(Looper.getMainLooper())
     private val proximityHandler: Handler = Handler(Looper.myLooper())
@@ -157,14 +83,6 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
     override fun onCreate() {
         super.onCreate()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Service State", NotificationManager.IMPORTANCE_LOW
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
 
         proximityDetector = ProximityDetector(this)
         val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
@@ -218,7 +136,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
                 mainHandler.post { toast("Proximity Service is already active") }
             } else {
                 mainHandler.post { toast("Proximity Service started") }
-                startForeground(NOTIFICATION_ID, runningNotification)
+                startForeground(NOTIFICATION_ID, notificationHelper.getRunningNotification())
                 isRunning = true
                 broadcastManager.sendBroadcast(Intent(INTENT_NOTIFY_ACTIVE))
             }
@@ -235,7 +153,7 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
         stopSelf()
 
         if (!appStorage.getBoolean(NOTIFICATION_DISMISS, true)) {
-            notificationManager.notify(NOTIFICATION_ID, stoppedNotification)
+            notificationHelper.notify(NOTIFICATION_ID, notificationHelper.getStoppedNotification())
         }
     }
 
@@ -366,8 +284,6 @@ class ProximityService : DaggerService(), ProximityDetector.ProximityListener {
 
         const val INTENT_NOTIFY_ACTIVE = "ss.proximityservice.ACTIVE"
         const val INTENT_NOTIFY_INACTIVE = "ss.proximityservice.INACTIVE"
-
-        private const val CHANNEL_ID = "proximityservice"
 
         private const val NOTIFICATION_ID = 1
 
