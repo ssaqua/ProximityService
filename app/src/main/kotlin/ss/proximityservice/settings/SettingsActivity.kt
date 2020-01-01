@@ -40,6 +40,11 @@ class SettingsActivity : DaggerAppCompatActivity() {
         }
     }
 
+    private val intentFilter = IntentFilter().apply {
+        addAction(INTENT_NOTIFY_ACTIVE)
+        addAction(INTENT_NOTIFY_INACTIVE)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -114,25 +119,19 @@ class SettingsActivity : DaggerAppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        val filter = IntentFilter().apply {
-            addAction(INTENT_NOTIFY_ACTIVE)
-            addAction(INTENT_NOTIFY_INACTIVE)
-        }
-        LocalBroadcastManager.getInstance(this).registerReceiver(stateReceiver, filter)
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(this).registerReceiver(stateReceiver, intentFilter)
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(stateReceiver)
     }
 
     private fun updateConditionCard(serviceState: Boolean) {
         val colorId = if (serviceState) R.color.accent else R.color.primaryLight
-        val conditionTextId =
-            if (serviceState) R.string.condition_active else R.string.condition_inactive
+        val conditionTextId = if (serviceState) R.string.condition_active else R.string.condition_inactive
         val btnTextId = if (serviceState) R.string.button_off else R.string.button_on
         condition_card.setBackgroundColor(ContextCompat.getColor(this, colorId))
         tv_condition.text = getString(conditionTextId)
