@@ -30,12 +30,12 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
 
     fun getRunningNotification(): Notification {
         return NotificationCompat.Builder(baseContext, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
+            .setSmallIcon(R.drawable.ic_screen_lock_portrait)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.notification_running))
             .setContentIntent(getActivityIntent<StopActivity>(PendingIntent.FLAG_ONE_SHOT))
             .addAction(
-                R.drawable.ic_settings_white_24dp,
+                R.drawable.ic_settings,
                 getString(R.string.notification_action_settings),
                 getActivityIntent<SettingsActivity>(PendingIntent.FLAG_UPDATE_CURRENT)
             )
@@ -46,12 +46,12 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
 
     fun getStoppedNotification(): Notification {
         return NotificationCompat.Builder(baseContext, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
+            .setSmallIcon(R.drawable.ic_screen_lock_portrait)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.notification_stopped))
             .setContentIntent(getActivityIntent<StartActivity>(PendingIntent.FLAG_ONE_SHOT))
             .addAction(
-                R.drawable.ic_settings_white_24dp,
+                R.drawable.ic_settings,
                 getString(R.string.notification_action_settings),
                 getActivityIntent<SettingsActivity>(PendingIntent.FLAG_UPDATE_CURRENT)
             )
