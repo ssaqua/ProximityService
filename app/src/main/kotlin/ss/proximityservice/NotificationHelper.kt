@@ -29,28 +29,19 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
     }
 
     fun getRunningNotification(): Notification {
-        val notification = NotificationCompat.Builder(baseContext, CHANNEL_ID)
+        return NotificationCompat.Builder(baseContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_screen_lock_portrait_white_24dp)
             .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(R.string.notification_running))
+            .setContentIntent(getActivityIntent<StopActivity>(PendingIntent.FLAG_ONE_SHOT))
+            .addAction(
+                R.drawable.ic_settings_white_24dp,
+                getString(R.string.notification_action_settings),
+                getActivityIntent<SettingsActivity>(PendingIntent.FLAG_UPDATE_CURRENT)
+            )
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setCategory(NotificationCompat.CATEGORY_TRANSPORT)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            notification
-                .setContentText(getString(R.string.notification_running))
-                .setContentIntent(getActivityIntent<StopActivity>(PendingIntent.FLAG_ONE_SHOT))
-                .addAction(
-                    R.drawable.ic_settings_white_24dp,
-                    getString(R.string.notification_action_settings),
-                    getActivityIntent<SettingsActivity>(PendingIntent.FLAG_UPDATE_CURRENT)
-                )
-        } else {
-            notification
-                .setContentText(getString(R.string.notification_settings))
-                .setContentIntent(getActivityIntent<SettingsActivity>(PendingIntent.FLAG_UPDATE_CURRENT))
-        }
-
-        return notification.build()
+            .build()
     }
 
     fun getStoppedNotification(): Notification {
