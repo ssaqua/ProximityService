@@ -75,6 +75,7 @@
                     android:gravity="start|center_vertical"
                     android:textAlignment="viewStart"
                     android:textColor="?android:attr/textColorPrimaryInverse"
+                    tools:text="@string/button_on"
                     style="?android:attr/buttonBarButtonStyle" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
