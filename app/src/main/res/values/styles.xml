@@ -3,7 +3,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
     </style>
-    <style name="OverlayTheme" parent="@android:style/Theme.Holo">
+    <style name="OverlayTheme">
         <item name="android:background">@android:color/black</item>
     </style>
 </resources>
