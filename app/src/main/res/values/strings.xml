@@ -5,7 +5,6 @@
     <string name="notification_running">Touch to stop service.</string>
     <string name="notification_stopped">Touch to restart service or swipe to dismiss.</string>
     <string name="notification_action_settings">Settings</string>
-    <string name="notification_action_stop">Stop</string>
     <string name="settings_subheader">Settings</string>
     <string name="settings_operational_mode_title">Operational mode</string>
     <string name="settings_operational_mode_secondary_default">Proximity Sensor WakeLock (default)</string>
@@ -16,8 +15,6 @@
     <string name="settings_notification_behavior_secondary_dismiss">Stop and dismiss</string>
     <string name="settings_notification_behavior_secondary_retain">Stop and retain</string>
     <string name="settings_notification_behavior_description">Select whether to dismiss or retain the Proximity Service notification when stopping the service.</string>
-    <string name="settings_service_mode">Service mode</string>
-    <string name="settings_service_mode_secondary">Proximity sensor wakelock</string>
     <string name="condition_inactive">Service is inactive</string>
     <string name="condition_active">Service is active</string>
     <string name="button_on">Turn on</string>
