@@ -67,9 +67,12 @@ class SettingsViewModel @Inject constructor(private val appStorage: AppStorage) 
         var screenOffDelay = appStorage.getInt(SCREEN_OFF_DELAY, 0)
         _screenOffDelayResId.value = when (screenOffDelay) {
             0 -> R.string.screen_off_delay_zero
-            1 -> R.string.screen_off_delay_one
-            2 -> R.string.screen_off_delay_two
-            3 -> R.string.screen_off_delay_three
+            1 -> R.string.screen_off_delay_zero_half
+            2 -> R.string.screen_off_delay_one
+            3 -> R.string.screen_off_delay_one_half
+            4 -> R.string.screen_off_delay_two
+            5 -> R.string.screen_off_delay_two_half
+            6 -> R.string.screen_off_delay_three
             else -> {
                 // reset to zero
                 appStorage.put(SCREEN_OFF_DELAY, 0)
